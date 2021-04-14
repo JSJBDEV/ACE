@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "gd.rf.acro.ace.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinClientPlayNetworkHandler",
+    "LivingEntityMixin"
+  ],
+  "client": [
+    "SpellRendererMixin",
+    "PlayerInventoryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

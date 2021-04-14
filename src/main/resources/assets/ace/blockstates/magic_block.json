@@ -1,0 +1,7 @@
+{
+	"variants": {
+		"": {
+			"model": "ace:block/magic_block"
+		}
+	}
+}
