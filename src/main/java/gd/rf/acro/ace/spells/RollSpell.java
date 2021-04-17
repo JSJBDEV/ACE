@@ -1,14 +1,11 @@
 package gd.rf.acro.ace.spells;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.FallingBlockEntity;
+import gd.rf.acro.ace.ACE;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.BlockTags;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.util.math.BlockPos;
 
-public class MineSpell extends Spell {
+public class RollSpell extends Spell {
     @Override
     public String spellType() {
         return "tap";
@@ -16,7 +13,7 @@ public class MineSpell extends Spell {
 
     @Override
     public String element() {
-        return "earth";
+        return "air";
     }
 
     @Override
@@ -26,16 +23,12 @@ public class MineSpell extends Spell {
 
     @Override
     public int cost() {
-        return 5;
+        return 2;
     }
 
     @Override
     public void onTapBlock(LivingEntity caster, BlockPos tapped) {
         super.onTapBlock(caster, tapped);
-        if(!caster.world.getBlockState(tapped).isIn(BlockTags.DRAGON_IMMUNE))
-        {
-            caster.world.breakBlock(tapped,true);
-            
-        }
+        caster.addStatusEffect(new StatusEffectInstance(ACE.AERIAL_EFFECT,1000));
     }
 }

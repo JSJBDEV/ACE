@@ -7,11 +7,9 @@ import gd.rf.acro.ace.blocks.TrapBlock;
 import gd.rf.acro.ace.effects.*;
 import gd.rf.acro.ace.entities.BoltEntity;
 import gd.rf.acro.ace.items.*;
-import gd.rf.acro.ace.spells.AirTrapSpell;
-import gd.rf.acro.ace.spells.EarthLaunchSpell;
-import gd.rf.acro.ace.spells.PushSpell;
-import gd.rf.acro.ace.spells.Spells;
+import gd.rf.acro.ace.spells.*;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.AbstractBlock;
@@ -24,6 +22,7 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Formatting;
@@ -36,7 +35,11 @@ import org.apache.logging.log4j.Logger;
 public class ACE implements ModInitializer {
 
 	public static final Tag<Block> INCINERATABLE = TagRegistry.block(new Identifier("ace","incineratable"));
+	public static final Tag<Item> METALWORKABLE = TagRegistry.item(new Identifier("ace","metalworkable"));
 	public static Logger LOGGER = LogManager.getLogger();
+	public static final ItemGroup TAB = FabricItemGroupBuilder.build(
+			new Identifier("ace", "tab"),
+			() -> new ItemStack(ACE.MASTER_SPELL_BOOK));
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -66,21 +69,22 @@ public class ACE implements ModInitializer {
 		});
 
 		LOGGER.log(Level.INFO,Spells.REGISTRY.size()+" spells loaded into ACE, let's go!");
+		LOGGER.log(Level.INFO,Spells.getNerdStats());
 		LOGGER.log(Level.INFO,"Ready to do some good ol' book magic?");
 
 	}
 
 
-	public static final SpellScrollItem SPELL_SCROLL_ITEM_0 = new SpellScrollItem(new Item.Settings().group(ItemGroup.MISC),new EarthLaunchSpell());
-	public static final SpellScrollItem SPELL_SCROLL_ITEM_1 = new SpellScrollItem(new Item.Settings().group(ItemGroup.MISC),new PushSpell(0.5));
-	public static final SpellScrollItem SPELL_SCROLL_ITEM_2 = new SpellScrollItem(new Item.Settings().group(ItemGroup.MISC),new AirTrapSpell());
-	public static final SimpleCastingItem MASTER_SPELL_BOOK = new SimpleCastingItem(new Item.Settings().group(ItemGroup.MISC),100,100,1);
-	public static final SimpleCastingItem BASIC_WAND = new SimpleCastingItem(new Item.Settings().group(ItemGroup.MISC),20,5,1);
-	public static final EarthenPickaxe EARTHEN_PICKAXE = new EarthenPickaxe(1,-2.8f,new Item.Settings().group(ItemGroup.MISC));
-	public static final IceSpikeSword ICE_SPIKE_SWORD = new IceSpikeSword(3,-2,new Item.Settings().group(ItemGroup.MISC));
-	public static final TestItem TEST_ITEM = new TestItem(new Item.Settings().group(ItemGroup.MISC));
-	public static final SpellCompendium SPELL_COMPENDIUM = new SpellCompendium(new Item.Settings().group(ItemGroup.MISC));
-	public static final DustyTomeItem DUSTY_TOME_ITEM =new DustyTomeItem(new Item.Settings().group(ItemGroup.MISC));
+	public static final SpellScrollItem SPELL_SCROLL_ITEM_0 = new SpellScrollItem(new Item.Settings().group(ACE.TAB),new EarthLaunchSpell());
+	public static final SpellScrollItem SPELL_SCROLL_ITEM_1 = new SpellScrollItem(new Item.Settings().group(ACE.TAB),new PushSpell(0.5));
+	public static final SpellScrollItem SPELL_SCROLL_ITEM_2 = new SpellScrollItem(new Item.Settings().group(ACE.TAB),new AirTrapSpell());
+	public static final SimpleCastingItem MASTER_SPELL_BOOK = new SimpleCastingItem(new Item.Settings().group(ACE.TAB),100,100,1);
+	public static final SimpleCastingItem BASIC_WAND = new SimpleCastingItem(new Item.Settings().group(ACE.TAB),20,5,1);
+	public static final EarthenPickaxe EARTHEN_PICKAXE = new EarthenPickaxe(1,-2.8f,new Item.Settings().group(ACE.TAB));
+	public static final IceSpikeSword ICE_SPIKE_SWORD = new IceSpikeSword(3,-2,new Item.Settings().group(ACE.TAB));
+	public static final TestItem TEST_ITEM = new TestItem(new Item.Settings().group(ACE.TAB));
+	public static final SpellCompendium SPELL_COMPENDIUM = new SpellCompendium(new Item.Settings().group(ACE.TAB));
+	public static final DustyTomeItem DUSTY_TOME_ITEM =new DustyTomeItem(new Item.Settings().group(ACE.TAB));
 
 	public void registerItems()
 	{
@@ -126,6 +130,9 @@ public class ACE implements ModInitializer {
 	public static final SecondChanceEffect SECOND_CHANCE_EFFECT = new SecondChanceEffect(StatusEffectType.BENEFICIAL,Formatting.WHITE.getColorValue());
 	public static final FreezeEffect FREEZE_EFFECT = new FreezeEffect(StatusEffectType.HARMFUL,Formatting.BLUE.getColorValue());
 	public static final NoSpellEffect NO_SPELL_EFFECT = new NoSpellEffect(StatusEffectType.HARMFUL,Formatting.RED.getColorValue());
+	public static final UndeadenedEffect UNDEADENED_EFFECT = new UndeadenedEffect(StatusEffectType.HARMFUL,Formatting.RED.getColorValue());
+	public static final AerialEffect AERIAL_EFFECT = new AerialEffect(StatusEffectType.BENEFICIAL,Formatting.WHITE.getColorValue());
+	public static final DoomsdayEffect DOOMSDAY_EFFECT = new DoomsdayEffect(StatusEffectType.HARMFUL,Formatting.BLACK.getColorValue());
 	public void registerEffects()
 	{
 		Registry.register(Registry.STATUS_EFFECT,new Identifier("ace","entangled"),ENTANGLED_EFFECT);
@@ -133,6 +140,9 @@ public class ACE implements ModInitializer {
 		Registry.register(Registry.STATUS_EFFECT,new Identifier("ace","second_chance"),SECOND_CHANCE_EFFECT);
 		Registry.register(Registry.STATUS_EFFECT,new Identifier("ace","freeze"),FREEZE_EFFECT);
 		Registry.register(Registry.STATUS_EFFECT,new Identifier("ace","no_spells"),NO_SPELL_EFFECT);
+		Registry.register(Registry.STATUS_EFFECT,new Identifier("ace","undeadened"),UNDEADENED_EFFECT);
+		Registry.register(Registry.STATUS_EFFECT,new Identifier("ace","aerial"),AERIAL_EFFECT);
+		Registry.register(Registry.STATUS_EFFECT,new Identifier("ace","doomsday"),DOOMSDAY_EFFECT);
 	}
 
 	public static final EntityType<BoltEntity> BOLT_ENTITY_TYPE =registerEntity("bolt",SpawnGroup.MISC,EntityDimensions.changing(0.5f,0.5f),((type, world) -> new BoltEntity(world)));

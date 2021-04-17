@@ -1,10 +1,10 @@
 package gd.rf.acro.ace.spells;
 
+import gd.rf.acro.ace.Utils;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.explosion.Explosion;
 
-public class HealSpell extends Spell {
-
-
+public class DetobeamSpell extends Spell {
     @Override
     public String spellType() {
         return "snap";
@@ -12,12 +12,12 @@ public class HealSpell extends Spell {
 
     @Override
     public String element() {
-        return "water";
+        return "fire";
     }
 
     @Override
     public int tier() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -28,6 +28,10 @@ public class HealSpell extends Spell {
     @Override
     public void snapCast(LivingEntity caster) {
         super.snapCast(caster);
-        caster.heal(2);
+        LivingEntity hit = Utils.castBeam(caster,caster.world,new float[]{1,0,0},5);
+        if(hit!=null)
+        {
+            caster.world.createExplosion(caster,hit.getX(),hit.getY(),hit.getZ(),3, Explosion.DestructionType.BREAK);
+        }
     }
 }

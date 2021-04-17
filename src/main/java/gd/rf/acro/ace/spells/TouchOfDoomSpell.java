@@ -1,9 +1,10 @@
 package gd.rf.acro.ace.spells;
 
+import gd.rf.acro.ace.ACE;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 
-public class HealingHandSpell extends Spell {
-
+public class TouchOfDoomSpell extends Spell {
     @Override
     public String spellType() {
         return "touch";
@@ -11,12 +12,12 @@ public class HealingHandSpell extends Spell {
 
     @Override
     public String element() {
-        return "water";
+        return "fire";
     }
 
     @Override
     public int tier() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -27,6 +28,6 @@ public class HealingHandSpell extends Spell {
     @Override
     public void onTouchCast(LivingEntity caster, LivingEntity victim) {
         super.onTouchCast(caster, victim);
-        victim.heal(7);
+        victim.addStatusEffect(new StatusEffectInstance(ACE.DOOMSDAY_EFFECT,1000));
     }
 }

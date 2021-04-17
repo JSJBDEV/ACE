@@ -48,7 +48,7 @@ public class IceSpikeSword extends SwordItem {
         super.appendTooltip(stack, world, tooltip, context);
         if(stack.hasTag())
         {
-            tooltip.add(new LiteralText("Expires: Tomorrow"+ Calendar.getDayPeriod(stack.getTag().getLong("fleeting"))));
+            tooltip.add(new LiteralText("Expires: Tomorrow "+ Calendar.getDayPeriod(stack.getTag().getLong("fleeting"))));
         }
     }
 }

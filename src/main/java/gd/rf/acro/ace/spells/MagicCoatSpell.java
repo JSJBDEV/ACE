@@ -1,10 +1,10 @@
 package gd.rf.acro.ace.spells;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 
-public class HealSpell extends Spell {
-
-
+public class MagicCoatSpell extends Spell {
     @Override
     public String spellType() {
         return "snap";
@@ -22,12 +22,13 @@ public class HealSpell extends Spell {
 
     @Override
     public int cost() {
-        return 5;
+        return 10;
     }
+
 
     @Override
     public void snapCast(LivingEntity caster) {
         super.snapCast(caster);
-        caster.heal(2);
+        caster.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE,500));
     }
 }

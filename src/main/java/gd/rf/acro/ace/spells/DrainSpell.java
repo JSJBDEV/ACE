@@ -1,9 +1,9 @@
 package gd.rf.acro.ace.spells;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 
-public class HealingHandSpell extends Spell {
-
+public class DrainSpell extends Spell {
     @Override
     public String spellType() {
         return "touch";
@@ -11,12 +11,12 @@ public class HealingHandSpell extends Spell {
 
     @Override
     public String element() {
-        return "water";
+        return "fire";
     }
 
     @Override
     public int tier() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -27,6 +27,7 @@ public class HealingHandSpell extends Spell {
     @Override
     public void onTouchCast(LivingEntity caster, LivingEntity victim) {
         super.onTouchCast(caster, victim);
-        victim.heal(7);
+        victim.damage(DamageSource.mob(caster),5);
+        caster.heal(5);
     }
 }

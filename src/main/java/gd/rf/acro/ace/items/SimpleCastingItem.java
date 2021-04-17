@@ -17,8 +17,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-import java.util.List;
-
 public class SimpleCastingItem extends Item {
 
     
@@ -35,10 +33,11 @@ public class SimpleCastingItem extends Item {
     
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        //This bit is to add spells to your casting device
         if(user.getOffHandStack().getItem() instanceof DustyTomeItem)
         {
             CompoundTag tag = user.getMainHandStack().getTag();
-            Spell onBook = Spells.getSpellBySimpleClassName(user.getOffHandStack().getTag().getString("spell"));
+            Spell onBook = Spells.getSpellByName(user.getOffHandStack().getTag().getString("spell"));
             ListTag spells = (ListTag) tag.get("spellsEquipped");
             if(spells.size()<tag.getInt("maxSpells"))
             {
@@ -53,6 +52,8 @@ public class SimpleCastingItem extends Item {
             user.getOffHandStack().decrement(1);
             return super.use(world, user, hand);
         }
+
+        //This bit is actual casting, specifically snapcasting
         Spell spell = getEquipped(user.getStackInHand(hand));
         if(spell!=null && hand==Hand.MAIN_HAND && spell.spellType().contains("snap"))
         {
@@ -109,7 +110,7 @@ public class SimpleCastingItem extends Item {
             CompoundTag tag = stack.getTag();
 
             ListTag spells = (ListTag) tag.get("spellsEquipped");
-            return Spells.getSpellBySimpleClassName(spells.getString(tag.getInt("selected")));
+            return Spells.getSpellByName(spells.getString(tag.getInt("selected")));
         }
         return null;
 
@@ -187,7 +188,7 @@ public class SimpleCastingItem extends Item {
             {
                 if(spells.size()<tag.getInt("maxSpells"))
                 {
-                    spells.add(StringTag.of(spell[i].getClass().getSimpleName()));
+                    spells.add(StringTag.of(Utils.getSpellName(spell[i])));
                 }
             }
 
@@ -203,7 +204,7 @@ public class SimpleCastingItem extends Item {
         CompoundTag tag = stack.getTag();
         ListTag spells = (ListTag) tag.get("spellsEquipped");
         for (int i = 0; i < spells.size(); i++) {
-            if(spells.getString(i).equals(spell.getClass().getSimpleName()))
+            if(spells.getString(i).equals(Utils.getSpellName(spell)))
             {
                 spells.remove(i);
                 tag.put("spellsEqipped",spells);

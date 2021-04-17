@@ -30,7 +30,7 @@ public class DustyTomeItem extends Item {
             CompoundTag tag = new CompoundTag();
             tag.putString("spell", Spells.REGISTRY.get(RandomUtils.nextInt(0, Spells.REGISTRY.size())).getClass().getSimpleName());
             stack.setTag(tag);
-            stack.setCustomName(Utils.getSpellDisplay(Spells.getSpellBySimpleClassName(tag.getString("spell"))));
+            stack.setCustomName(Utils.getSpellDisplay(Spells.getSpellByName(tag.getString("spell"))));
 
         }
     }
@@ -41,10 +41,10 @@ public class DustyTomeItem extends Item {
         if(stack.hasTag())
         {
             //TODO: check this and maybe add a way of turning it off - or simply show this information by opening a screen
-            Spell spell = Spells.getSpellBySimpleClassName(stack.getTag().getString("spell"));
+            Spell spell = Spells.getSpellByName(stack.getTag().getString("spell"));
             tooltip.add(new LiteralText("Casting Type: "+spell.spellType()));
             tooltip.add(new LiteralText("Element: "+spell.element()));
-            tooltip.add(new LiteralText("Mana Cost:"+spell.cost()));
+            tooltip.add(new LiteralText("Mana Cost: "+spell.cost()));
             tooltip.add(new LiteralText("Tier: "+spell.tier()));
             tooltip.add(new TranslatableText(Utils.getSpellTranslatable(spell)));
         }

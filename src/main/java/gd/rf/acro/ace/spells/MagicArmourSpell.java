@@ -1,18 +1,18 @@
 package gd.rf.acro.ace.spells;
 
-import gd.rf.acro.ace.ACE;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 
-public class TryAgainSpell extends Spell {
+public class MagicArmourSpell extends Spell {
     @Override
     public String spellType() {
-        return "touch";
+        return "snap";
     }
 
     @Override
     public String element() {
-        return "fire";
+        return "water";
     }
 
     @Override
@@ -22,12 +22,13 @@ public class TryAgainSpell extends Spell {
 
     @Override
     public int cost() {
-        return 20;
+        return 15;
     }
 
+
     @Override
-    public void onTouchCast(LivingEntity caster, LivingEntity victim) {
-        super.onTouchCast(caster, victim);
-        victim.addStatusEffect(new StatusEffectInstance(ACE.SECOND_CHANCE_EFFECT,200));
+    public void snapCast(LivingEntity caster) {
+        super.snapCast(caster);
+        caster.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE,500,2));
     }
 }

@@ -2,11 +2,12 @@ package gd.rf.acro.ace.spells;
 
 import net.minecraft.entity.LivingEntity;
 
-public class HealingHandSpell extends Spell {
+public class RecoverySpell extends Spell {
+
 
     @Override
     public String spellType() {
-        return "touch";
+        return "snap";
     }
 
     @Override
@@ -16,17 +17,17 @@ public class HealingHandSpell extends Spell {
 
     @Override
     public int tier() {
-        return 0;
+        return 1;
     }
 
     @Override
     public int cost() {
-        return 5;
+        return 10;
     }
 
     @Override
-    public void onTouchCast(LivingEntity caster, LivingEntity victim) {
-        super.onTouchCast(caster, victim);
-        victim.heal(7);
+    public void snapCast(LivingEntity caster) {
+        super.snapCast(caster);
+        caster.heal(5);
     }
 }

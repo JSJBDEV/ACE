@@ -1,14 +1,9 @@
 package gd.rf.acro.ace.spells;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 
-public class MineSpell extends Spell {
+public class SpiritWalkSpell extends Spell {
     @Override
     public String spellType() {
         return "tap";
@@ -16,12 +11,12 @@ public class MineSpell extends Spell {
 
     @Override
     public String element() {
-        return "earth";
+        return "air";
     }
 
     @Override
     public int tier() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -32,10 +27,6 @@ public class MineSpell extends Spell {
     @Override
     public void onTapBlock(LivingEntity caster, BlockPos tapped) {
         super.onTapBlock(caster, tapped);
-        if(!caster.world.getBlockState(tapped).isIn(BlockTags.DRAGON_IMMUNE))
-        {
-            caster.world.breakBlock(tapped,true);
-            
-        }
+        caster.teleport(tapped.getX()+0.5,tapped.getY(),tapped.getZ()+0.5);
     }
 }

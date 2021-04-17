@@ -1,0 +1,18 @@
+{
+  "itemGroup.ace.tab": "Acro's Classical Elements",
+
+  "effect.ace.undeadened": "Undeadened",
+  "effect.ace.second_chance": "Second Chance",
+  "effect.ace.entangled": "Entangled",
+  "effect.ace.no_spell": "No Casting",
+  "effect.ace.freeze": "Frozen",
+  "effect.ace.wind_call": "Wind Call",
+  "effect.ace.aerial": "Prepared for the fall",
+  "effect.ace.doomsday": "Death or Taxes",
+
+  "item.ace.earthen_pickaxe": "Earthen Pickaxe",
+  "item.ace.ice_spike": "Ice Spike",
+  "item.ace.master_spellbook": "Master Spellbook (Creative)",
+  "item.ace.dusty_tome": "Dusty Tome",
+  "item.ace.basic_wand": "Stone-Wood Wand"
+}

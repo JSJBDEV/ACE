@@ -1,23 +1,21 @@
 package gd.rf.acro.ace;
 
-import com.mojang.datafixers.kinds.IdF;
 import gd.rf.acro.ace.items.DustyTomeItem;
 import gd.rf.acro.ace.spells.Spell;
 import gd.rf.acro.ace.spells.Spells;
+import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.scoreboard.ScoreboardCriterion;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.RandomUtils;
 
@@ -28,6 +26,7 @@ import java.util.Random;
 public class Utils {
 
 
+    //random but it can process minus numbers, useful for coordinates
     public static int random(int min, int max)
     {
         if(min<0)
@@ -37,10 +36,13 @@ public class Utils {
         return RandomUtils.nextInt(min,max);
     }
 
+    //this should probably be deprecated, see below
     public static LivingEntity castBeam(LivingEntity user, World world, float[] rgb)
     {
         return castBeam(user, world, rgb,5);
     }
+
+    //makes a particle beam using a raycast
     public static LivingEntity castBeam(LivingEntity user, World world, float[] rgb,float size)
     {
         LivingEntity livingEntity = getRaycastHit(user,world);
@@ -64,6 +66,7 @@ public class Utils {
         }
         return livingEntity;
     }
+    //makes a particle beam to a blockpos
     public static void castBeamToPos(LivingEntity user, BlockPos pos, World world, float[] rgb, float size)
     {
         Random random = new Random();
@@ -83,6 +86,7 @@ public class Utils {
 
         }
     }
+    //makes a particle beam between 2 entities
     public static LivingEntity castConnection(LivingEntity user,LivingEntity livingEntity, World world, float[] rgb,int size)
     {
         Random random = new Random();
@@ -122,18 +126,22 @@ public class Utils {
                 return new float[]{0,0,1};
             case "earth":
                 return new float[]{0,1,0};
+            case "air":
+                return new float[]{1,1,1};
 
         }
         return new float[]{0,0,0};
     }
 
-    public static MutableText getSpellName(Spell spell)
+    //Turns the spell class name into normal english
+    public static MutableText getFormattedSpellName(Spell spell)
     {
-        String[] r = spell.getClass().getSimpleName().split("(?=\\p{Upper})");
+        String[] r = getSpellName(spell).split("(?=\\p{Upper})");
         LiteralText text = new LiteralText( String.join(" ",r));
 
         return text.setStyle(Style.EMPTY.withBold(false).withItalic(false).withUnderline(false).withColor(TextColor.fromRgb(getSpellColour(spell))));
     }
+
     public static int getSpellColour(Spell spell)
     {
         switch (spell.element())
@@ -151,21 +159,25 @@ public class Utils {
         return Formatting.WHITE.getColorValue();
     }
 
+    //helper method to render on dusty tomes and in hud
     public static MutableText getSpellDisplay(Spell spell)
     {
         LiteralText text = new LiteralText(" ");
         text.setStyle(Style.EMPTY.withItalic(false));
-        return text.append(Utils.getSpellIcon(spell)).append(Utils.getSpellName(spell));
+        return text.append(Utils.getSpellIcon(spell)).append(Utils.getFormattedSpellName(spell));
     }
 
+    //A spell description
     public static String getSpellTranslatable(Spell spell)
     {
-        return "ace."+spell.getClass().getSimpleName()+".desc";
+        return "ace."+ getSpellName(spell)+".desc";
     }
 
-    //TODO: find something like hashcode but that doesn't change each boot
+
+    //gets a procedurally generated icon for a spell including ones I don't add
     public static MutableText getSpellIcon(Spell spell)
     {
+        int spellNumber = (int) getSpellNumber(spell);
         String variationSelector = "";
         //seems cursed, but the alchemical symbols are far outside minecrafts range
         //(the alchemical symbols are at 1F700 but minecrafts range stops at FF00)
@@ -192,16 +204,16 @@ public class Utils {
         }
         LiteralText text = new LiteralText(variationSelector);
         Style style = Style.EMPTY;
-        style = style.withColor(TextColor.fromRgb(spell.getClass().hashCode()));
-        if(spell.getClass().hashCode()%5==0)
+        style = style.withColor(TextColor.fromRgb(spellNumber));
+        if(spellNumber%5==0)
         {
             style = style.withBold(true);
         }
-        if(spell.getClass().hashCode()%7==0)
+        if(spellNumber%7==0)
         {
             style = style.withUnderline(true);
         }
-        if(spell.getClass().hashCode()%11==0)
+        if(spellNumber%11==0)
         {
             style = style.withItalic(true);
         }
@@ -216,10 +228,61 @@ public class Utils {
         {
             if(stack.getItem() instanceof DustyTomeItem)
             {
-                spells.add(Spells.getSpellBySimpleClassName(stack.getTag().getString("spell")));
+                spells.add(Spells.getSpellByName(stack.getTag().getString("spell")));
             }
         });
         return spells;
+    }
+
+    public static void modifyDevotionValue(LivingEntity entity,String devotion, int amount)
+    {
+        Scoreboard scoreboard = entity.world.getScoreboard();
+        if(!scoreboard.containsObjective("ace_"+devotion))
+        {
+            scoreboard.addObjective("ace_"+devotion, ScoreboardCriterion.DUMMY,new LiteralText("Devotion to "+devotion), ScoreboardCriterion.RenderType.INTEGER);
+        }
+        scoreboard.getPlayerScore(entity.getUuidAsString(),scoreboard.getObjective("ace_"+devotion)).incrementScore(amount);
+    }
+    public static int getDevotionTo(LivingEntity entity, String devotion)
+    {
+        Scoreboard scoreboard = entity.world.getScoreboard();
+        if(!scoreboard.containsObjective("ace_"+devotion))
+        {
+            scoreboard.addObjective("ace_"+devotion, ScoreboardCriterion.DUMMY,new LiteralText("Devotion to "+devotion), ScoreboardCriterion.RenderType.INTEGER);
+        }
+        return scoreboard.getPlayerScore(entity.getUuidAsString(),scoreboard.getObjective("ace_"+devotion)).getScore();
+    }
+
+    //creates an AreaEffectCloud entity (like in dragons breath potions)
+    public static void createAOE(World world, BlockPos pos,float[] rgb, StatusEffectInstance effect)
+    {
+        AreaEffectCloudEntity areaEffectCloudEntity = new AreaEffectCloudEntity(world,pos.getX(),pos.getY(),pos.getZ());
+        areaEffectCloudEntity.setParticleType(new DustParticleEffect(rgb[0],rgb[1],rgb[2],1));
+        areaEffectCloudEntity.setRadius(3.0F);
+        areaEffectCloudEntity.setDuration(200);
+        areaEffectCloudEntity.setRadiusGrowth((7.0F - areaEffectCloudEntity.getRadius()) / (float)areaEffectCloudEntity.getDuration());
+        areaEffectCloudEntity.addEffect(effect);
+        world.spawnEntity(areaEffectCloudEntity);
+    }
+
+    //Congruential number generation because hashcodes change but pseudorandom doesn't
+    public static long getSpellNumber(Spell spell)
+    {
+
+        int numbers = getSpellName(spell).chars().sum();
+        return ((numbers+5441441)*3411241)%92341123;
+    }
+
+    //I thought about this after I made all my spells individual classes, technically this way they don't have to be.
+    //The spell's class needs to return a name value that differs per spell that class deals with
+    //any name returned should probably still be in MyCoolSpell form so that the formatted text makes sense
+    public static String getSpellName(Spell spell)
+    {
+        if(spell.name()!=null)
+        {
+            return spell.name();
+        }
+        return spell.getClass().getSimpleName();
     }
 
 }

@@ -1,10 +1,9 @@
 package gd.rf.acro.ace.spells;
 
+import gd.rf.acro.ace.ACE;
 import net.minecraft.entity.LivingEntity;
 
-public class HealSpell extends Spell {
-
-
+public class MetalworkSpell extends Spell {
     @Override
     public String spellType() {
         return "snap";
@@ -12,7 +11,7 @@ public class HealSpell extends Spell {
 
     @Override
     public String element() {
-        return "water";
+        return "fire";
     }
 
     @Override
@@ -28,6 +27,9 @@ public class HealSpell extends Spell {
     @Override
     public void snapCast(LivingEntity caster) {
         super.snapCast(caster);
-        caster.heal(2);
+        if(caster.getOffHandStack().getItem().isIn(ACE.METALWORKABLE))
+        {
+            caster.getOffHandStack().damage(-5,caster,null);
+        }
     }
 }

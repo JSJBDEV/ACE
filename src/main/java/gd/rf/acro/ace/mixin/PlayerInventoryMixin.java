@@ -37,7 +37,6 @@ public abstract class PlayerInventoryMixin {
         }
         if(this.main.get(this.selectedSlot).getItem() instanceof SimpleCastingItem)
         {
-            System.out.println(scrollAmount);
             PacketByteBuf packetByteBuf = PacketByteBufs.create();
             packetByteBuf.writeInt((int) scrollAmount);
             ClientPlayNetworking.send(ACE.SCROLL_PACKET,packetByteBuf);

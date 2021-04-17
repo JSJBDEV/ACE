@@ -1,9 +1,9 @@
 package gd.rf.acro.ace.spells;
 
-import gd.rf.acro.ace.effects.NoSpellEffect;
+import gd.rf.acro.ace.Utils;
 
 import java.util.ArrayList;
-import java.util.concurrent.RejectedExecutionException;
+import java.util.List;
 
 public class Spells {
     public static final AirTrapSpell AIR_TRAP_SPELL = new AirTrapSpell();
@@ -36,8 +36,8 @@ public class Spells {
     public static final ExtractNutrientsSpell EXTRACT_NUTRIENTS_SPELL = new ExtractNutrientsSpell();
     public static final CreateIceSpikeSpell CREATE_ICE_SPIKE_SPELL = new CreateIceSpikeSpell();
     public static final CreatePickaxeSpell CREATE_PICKAXE_SPELL = new CreatePickaxeSpell();
-    public static final HealingHandSpell HEALING_TOUCH_SPELL = new HealingHandSpell(3);
-    public static final HealingHandSpell HEALING_HAND_SPELL = new HealingHandSpell(7);
+    public static final HealingTouchSpell HEALING_TOUCH_SPELL = new HealingTouchSpell();
+    public static final HealingHandSpell HEALING_HAND_SPELL = new HealingHandSpell();
     public static final SandAttackSpell SAND_ATTACK_SPELL = new SandAttackSpell();
     public static final HydroBeamSpell HYDRO_BEAM_SPELL = new HydroBeamSpell();
     public static final EntrappingBeamSpell ENTRAPPING_BEAM_SPELL = new EntrappingBeamSpell();
@@ -48,8 +48,8 @@ public class Spells {
     public static final BlinkSpell BLINK_SPELL = new BlinkSpell();
     public static final QuickenSpell QUICKEN_SPELL = new QuickenSpell();
     public static final CaveSpell CAVE_SPELL = new CaveSpell();
-    public static final HealSpell HEAL_SPELL = new HealSpell(5);
-    public static final HealSpell RECOVERY_SPELL = new HealSpell(15);
+    public static final HealSpell HEAL_SPELL = new HealSpell();
+    public static final RecoverySpell RECOVERY_SPELL = new RecoverySpell();
     public static final SwitchBeamSpell SWITCH_BEAM_SPELL = new SwitchBeamSpell();
     public static final DeadlockSpell DEADLOCK_SPELL = new DeadlockSpell();
     public static final NoCastingSpell NO_CASTING_SPELL = new NoCastingSpell();
@@ -73,6 +73,34 @@ public class Spells {
     public static final FrostSeedSpell FROST_SEED_SPELL = new FrostSeedSpell();
     public static final DisableRedstoneSpell DISABLE_REDSTONE_SPELL = new DisableRedstoneSpell();
     public static final SabotageRedstoneSpell SABOTAGE_REDSTONE_SPELL = new SabotageRedstoneSpell();
+    public static final DrainSpell DRAIN_SPELL = new DrainSpell();
+    public static final HeatResistSpell HEAT_RESIST_SPELL =new HeatResistSpell();
+    public static final ShotgunSpell SHOTGUN_SPELL =new ShotgunSpell();
+    public static final MagicSenseSpell MAGIC_SENSE_SPELL = new MagicSenseSpell();
+    public static final DetobeamSpell DETOBEAM_SPELL = new DetobeamSpell();
+    public static final UndeadCurseSpell UNDEAD_CURSE_SPELL = new UndeadCurseSpell();
+    public static final LetThemBurnSpell LET_THEM_BURN_SPELL = new LetThemBurnSpell();
+    public static final RefuseToDieSpell REFUSE_TO_DIE_SPELL = new RefuseToDieSpell();
+    public static final RollSpell ROLL_SPELL = new RollSpell();
+    public static final LeapSpell LEAP_SPELL = new LeapSpell();
+    public static final VanishingActSpell VANISHING_ACT_SPELL = new VanishingActSpell();
+    public static final UpdraftSpell UPDRAFT_SPELL = new UpdraftSpell();
+    public static final PoisonBeamSpell POISON_BEAM_SPELL = new PoisonBeamSpell();
+    public static final ThornRainSpell THORN_RAIN_SPELL = new ThornRainSpell();
+    public static final SummonDoomedWolfSpell SUMMON_DOOMED_WOLF_SPELL = new SummonDoomedWolfSpell();
+    public static final SummonDoomedCatSpell SUMMON_DOOMED_CAT_SPELL = new SummonDoomedCatSpell();
+    public static final TouchOfDoomSpell TOUCH_OF_DOOM_SPELL = new TouchOfDoomSpell();
+    public static final MementoSpell MEMENTO_SPELL = new MementoSpell();
+    public static final SpiritWalkSpell SPIRIT_WALK_SPELL = new SpiritWalkSpell();
+    public static final GillsSpell GILLS_SPELL = new GillsSpell();
+    public static final PauseTimeSpell PAUSE_TIME_SPELL = new PauseTimeSpell();
+    public static final RideSpell RIDE_SPELL = new RideSpell();
+    public static final DisableMagicSpell DISABLE_MAGIC_SPELL = new DisableMagicSpell();
+    public static final EscapeSpell ESCAPE_SPELL = new EscapeSpell();
+    public static final HealosphereSpell HEALOSPHERE_SPELL = new HealosphereSpell();
+    public static final MagicCoatSpell MAGIC_COAT_SPELL = new MagicCoatSpell();
+    public static final MagicArmourSpell MAGIC_ARMOUR_SPELL = new MagicArmourSpell();
+
 
     public static ArrayList<Spell> REGISTRY = new ArrayList<>();
 
@@ -145,17 +173,94 @@ public class Spells {
         REGISTRY.add(FROST_SEED_SPELL);
         REGISTRY.add(DISABLE_REDSTONE_SPELL);
         REGISTRY.add(SABOTAGE_REDSTONE_SPELL);
+        REGISTRY.add(DRAIN_SPELL);
+        REGISTRY.add(HEAT_RESIST_SPELL);
+        REGISTRY.add(SHOTGUN_SPELL);
+        REGISTRY.add(MAGIC_SENSE_SPELL);
+        REGISTRY.add(DETOBEAM_SPELL);
+        REGISTRY.add(UNDEAD_CURSE_SPELL);
+        REGISTRY.add(LET_THEM_BURN_SPELL);
+        REGISTRY.add(REFUSE_TO_DIE_SPELL);
+        REGISTRY.add(LEAP_SPELL);
+        REGISTRY.add(ROLL_SPELL);
+        REGISTRY.add(VANISHING_ACT_SPELL);
+        REGISTRY.add(UPDRAFT_SPELL);
+        REGISTRY.add(POISON_BEAM_SPELL);
+        REGISTRY.add(THORN_RAIN_SPELL);
+        REGISTRY.add(SUMMON_DOOMED_CAT_SPELL);
+        REGISTRY.add(SUMMON_DOOMED_WOLF_SPELL);
+        REGISTRY.add(TOUCH_OF_DOOM_SPELL);
+        REGISTRY.add(MEMENTO_SPELL);
+        REGISTRY.add(SPIRIT_WALK_SPELL);
+        REGISTRY.add(GILLS_SPELL);
+        REGISTRY.add(PAUSE_TIME_SPELL);
+        REGISTRY.add(RIDE_SPELL);
+        REGISTRY.add(DISABLE_MAGIC_SPELL);
+        REGISTRY.add(ESCAPE_SPELL);
+        REGISTRY.add(HEALOSPHERE_SPELL);
+        REGISTRY.add(MAGIC_COAT_SPELL);
+        REGISTRY.add(MAGIC_ARMOUR_SPELL);
 
     }
 
-    public static Spell getSpellBySimpleClassName(String name)
+    public static Spell getSpellByName(String name)
     {
         for (Spell spell : REGISTRY) {
-            if (spell.getClass().getSimpleName().equals(name)) {
+            if (Utils.getSpellName(spell).equals(name)) {
                 return spell;
             }
         }
         return null;
+    }
+    public static List<Spell> getSpellsByElement(String element)
+    {
+        List<Spell> spells = new ArrayList<>();
+        REGISTRY.forEach(spell ->
+        {
+            if(spell.element().equals(element))
+            {
+                spells.add(spell);
+            }
+        });
+        return spells;
+    }
+    public static List<Spell> getSpellsByTier(int tier)
+    {
+        List<Spell> spells = new ArrayList<>();
+        REGISTRY.forEach(spell ->
+        {
+            if(spell.tier()==tier)
+            {
+                spells.add(spell);
+            }
+        });
+        return spells;
+    }
+    public static List<Spell> getSpellsByStyle(String style)
+    {
+        List<Spell> spells = new ArrayList<>();
+        REGISTRY.forEach(spell ->
+        {
+            if(spell.spellType().equals(style))
+            {
+                spells.add(spell);
+            }
+        });
+        return spells;
+    }
+
+    public static String getNerdStats()
+    {
+        return "\nSnap spells: " + getSpellsByStyle("snap").size() +
+                "\nTap spells: " + getSpellsByStyle("tap").size() +
+                "\nTouch spells: " + getSpellsByStyle("touch").size() +
+                "\n\nAir spells: " + getSpellsByElement("air").size() +
+                "\nEarth spells: " + getSpellsByElement("earth").size() +
+                "\nFire spells: " + getSpellsByElement("fire").size() +
+                "\nWater spells: " + getSpellsByElement("water").size() +
+                "\n\nTier 0 spells: " + getSpellsByTier(0).size() +
+                "\nTier 1 spells: " + getSpellsByTier(1).size() +
+                "\nTier 2 spells: " + getSpellsByTier(2).size();
     }
 
 
