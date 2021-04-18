@@ -3,11 +3,18 @@ package gd.rf.acro.ace;
 import gd.rf.acro.ace.items.DustyTomeItem;
 import gd.rf.acro.ace.spells.Spell;
 import gd.rf.acro.ace.spells.Spells;
+import net.minecraft.block.SpawnerBlock;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntArrayTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardCriterion;
@@ -33,6 +40,17 @@ public class Utils {
         {
             return (RandomUtils.nextInt(0,max+Math.abs(min))-Math.abs(min));
         }
+        return RandomUtils.nextInt(min,max);
+    }
+    public static int randomNoZero(int min, int max)
+    {
+        if(min<1)
+        {
+            int g = (RandomUtils.nextInt(1,max+Math.abs(min))-Math.abs(min));
+            if(g!=0){return g;}
+            return randomNoZero(min,max);
+        }
+
         return RandomUtils.nextInt(min,max);
     }
 
@@ -136,7 +154,7 @@ public class Utils {
     //Turns the spell class name into normal english
     public static MutableText getFormattedSpellName(Spell spell)
     {
-        String[] r = getSpellName(spell).split("(?=\\p{Upper})");
+        String[] r = spell.name().split("(?=\\p{Upper})");
         LiteralText text = new LiteralText( String.join(" ",r));
 
         return text.setStyle(Style.EMPTY.withBold(false).withItalic(false).withUnderline(false).withColor(TextColor.fromRgb(getSpellColour(spell))));
@@ -170,7 +188,7 @@ public class Utils {
     //A spell description
     public static String getSpellTranslatable(Spell spell)
     {
-        return "ace."+ getSpellName(spell)+".desc";
+        return "ace."+ spell.name()+".desc";
     }
 
 
@@ -269,20 +287,39 @@ public class Utils {
     public static long getSpellNumber(Spell spell)
     {
 
-        int numbers = getSpellName(spell).chars().sum();
+        int numbers = spell.name().chars().sum();
         return ((numbers+5441441)*3411241)%92341123;
     }
 
-    //I thought about this after I made all my spells individual classes, technically this way they don't have to be.
-    //The spell's class needs to return a name value that differs per spell that class deals with
-    //any name returned should probably still be in MyCoolSpell form so that the formatted text makes sense
-    public static String getSpellName(Spell spell)
+    public static ItemStack createRocketStack()
     {
-        if(spell.name()!=null)
-        {
-            return spell.name();
+        ItemStack stack = new ItemStack(Items.FIREWORK_ROCKET);
+        CompoundTag tag = new CompoundTag();
+        ListTag explosions = new ListTag();
+        for (int i = 0; i < RandomUtils.nextInt(1,7); i++) {
+            CompoundTag explosion = new CompoundTag();
+            explosion.putBoolean("Flicker",RandomUtils.nextBoolean());
+            explosion.putBoolean("Trail",RandomUtils.nextBoolean());
+            explosion.putInt("Type",RandomUtils.nextInt(0,5));
+            explosion.putIntArray("Colors",genColourList(RandomUtils.nextInt(1,5)));
+            explosion.putIntArray("FadeColors",genColourList(RandomUtils.nextInt(1,5)));
+            explosions.add(explosion);
         }
-        return spell.getClass().getSimpleName();
+        tag.put("Explosions",explosions);
+        tag.putInt("Flight",Utils.random(-5,5));
+        CompoundTag fireworks = new CompoundTag();
+        fireworks.put("Fireworks",tag);
+        stack.setTag(fireworks);
+        return stack;
+    }
+    public static List<Integer> genColourList(int length)
+    {
+        List<Integer> colours = new ArrayList<>();
+        for (int i = 0; i < length; i++) {
+            colours.add(Formatting.byColorIndex(RandomUtils.nextInt(0,16)).getColorValue());
+        }
+
+        return colours;
     }
 
 }

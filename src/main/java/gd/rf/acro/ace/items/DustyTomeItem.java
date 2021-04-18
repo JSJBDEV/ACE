@@ -48,6 +48,11 @@ public class DustyTomeItem extends Item {
             tooltip.add(new LiteralText("Tier: "+spell.tier()));
             tooltip.add(new TranslatableText(Utils.getSpellTranslatable(spell)));
         }
+        else
+        {
+            tooltip.add(new LiteralText("A dusty spell book..."));
+            tooltip.add(new LiteralText("What knowledge will it reveal?"));
+        }
 
     }
 }

@@ -1,10 +1,11 @@
 package gd.rf.acro.ace.items;
 
 import gd.rf.acro.ace.ACE;
-import gd.rf.acro.ace.Utils;
-import gd.rf.acro.ace.spells.*;
+import gd.rf.acro.ace.spells.Spell;
+import gd.rf.acro.ace.spells.Spells;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,25 +17,25 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.RandomUtils;
 
-public class SimpleCastingItem extends Item {
+public class ManalessCastingItem extends Item {
 
-    
-    private int mana;
+
+
     private int maxSpells;
-    private int manaRegen;
-    public SimpleCastingItem(Settings settings, int mana, int maxSpells,int manaRegen) {
+    public ManalessCastingItem(Settings settings, int maxSpells) {
         super(settings);
-        this.mana=mana;
+
         this.maxSpells=maxSpells;
-        this.manaRegen=manaRegen;
+
     }
 
     
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         //This bit is to add spells to your casting device
-        if(user.getOffHandStack().getItem() instanceof DustyTomeItem)
+        if(user.getOffHandStack().getItem() instanceof DustyTomeItem && user.getMainHandStack().getItem()!=ACE.GRIMOIRE)
         {
             CompoundTag tag = user.getMainHandStack().getTag();
             Spell onBook = Spells.getSpellByName(user.getOffHandStack().getTag().getString("spell"));
@@ -57,12 +58,10 @@ public class SimpleCastingItem extends Item {
         Spell spell = getEquipped(user.getStackInHand(hand));
         if(spell!=null && hand==Hand.MAIN_HAND && spell.spellType().contains("snap"))
         {
-            CompoundTag tag = user.getStackInHand(hand).getTag();
-            if(tag.getInt("mana")>spell.cost())
+            spell.snapCast(user);
+            if(user.getStackInHand(hand).getItem()==ACE.DEMONS_KATAR)
             {
-                spell.snapCast(user);
-                tag.putInt("mana",tag.getInt("mana")-spell.cost());
-                user.getStackInHand(hand).setTag(tag);
+                user.damage(DamageSource.MAGIC,spell.cost());
             }
 
         }
@@ -74,13 +73,12 @@ public class SimpleCastingItem extends Item {
         Spell spell = getEquipped(stack);
         if(spell!=null && hand==Hand.MAIN_HAND && spell.spellType().contains("touch"))
         {
-            CompoundTag tag = stack.getTag();
-            if(tag.getInt("mana")>spell.cost())
+            spell.onTouchCast(user,entity);
+            if(user.getStackInHand(hand).getItem()==ACE.DEMONS_KATAR)
             {
-                spell.onTouchCast(user,entity);
-                tag.putInt("mana",tag.getInt("mana")-spell.cost());
-                stack.setTag(tag);
+                user.damage(DamageSource.MAGIC,spell.cost());
             }
+
         }
         return super.useOnEntity(stack, user, entity, hand);
     }
@@ -90,13 +88,11 @@ public class SimpleCastingItem extends Item {
         Spell spell = getEquipped(context.getStack());
         if(spell!=null && context.getHand()==Hand.MAIN_HAND && spell.spellType().contains("tap"))
         {
-            CompoundTag tag = context.getStack().getTag();
-            if(tag.getInt("mana")>spell.cost())
+            spell.onTapBlock(context.getPlayer(),context.getBlockPos());
+            spell.onTapBlockFace(context.getPlayer(),context.getBlockPos(),context.getSide());
+            if(context.getPlayer().getStackInHand(context.getHand()).getItem()==ACE.DEMONS_KATAR)
             {
-                spell.onTapBlock(context.getPlayer(),context.getBlockPos());
-                spell.onTapBlockFace(context.getPlayer(),context.getBlockPos(),context.getSide());
-                tag.putInt("mana",tag.getInt("mana")-spell.cost());
-                context.getStack().setTag(tag);
+                context.getPlayer().damage(DamageSource.MAGIC,spell.cost());
             }
 
         }
@@ -127,13 +123,14 @@ public class SimpleCastingItem extends Item {
             ListTag list = new ListTag();
             tag.put("spellsEquipped",list);
             tag.putInt("maxSpells",maxSpells);
-            tag.putInt("mana",mana);
-            tag.putInt("maxMana",mana);
-            tag.putInt("manaRegen",manaRegen);
             stack.setTag(tag);
-            if(stack.getItem()== ACE.MASTER_SPELL_BOOK)
+            if(stack.getItem()== ACE.GRIMOIRE)
             {
-                addSpell(stack, Spells.REGISTRY.toArray(new Spell[]{}));
+                addSpell(stack,Spells.REGISTRY.get(RandomUtils.nextInt(0,Spells.REGISTRY.size())));
+                addSpell(stack,Spells.REGISTRY.get(RandomUtils.nextInt(0,Spells.REGISTRY.size())));
+                addSpell(stack,Spells.REGISTRY.get(RandomUtils.nextInt(0,Spells.REGISTRY.size())));
+                addSpell(stack,Spells.REGISTRY.get(RandomUtils.nextInt(0,Spells.REGISTRY.size())));
+                addSpell(stack,Spells.REGISTRY.get(RandomUtils.nextInt(0,Spells.REGISTRY.size())));
             }
         }
         tag=stack.getTag();

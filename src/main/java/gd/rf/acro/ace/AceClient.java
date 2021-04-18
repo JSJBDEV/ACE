@@ -1,6 +1,7 @@
 package gd.rf.acro.ace;
 
 import gd.rf.acro.ace.entities.BoltEntityRenderer;
+import gd.rf.acro.ace.entities.EvilMageRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
@@ -19,6 +20,6 @@ public class AceClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ACE.MAGIC_BLOCK, RenderLayer.getTranslucent());
 
         EntityRendererRegistry.INSTANCE.register(ACE.BOLT_ENTITY_TYPE, (entityRenderDispatcher, context) -> new BoltEntityRenderer(entityRenderDispatcher,context.getItemRenderer(),1,false));
-
+        EntityRendererRegistry.INSTANCE.register(ACE.EVIL_MAGE_ENTITY_TYPE,(dispatcher, context) -> new EvilMageRenderer(dispatcher));
     }
 }

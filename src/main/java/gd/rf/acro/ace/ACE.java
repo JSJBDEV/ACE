@@ -6,11 +6,17 @@ import gd.rf.acro.ace.blocks.SeepingIceBlock;
 import gd.rf.acro.ace.blocks.TrapBlock;
 import gd.rf.acro.ace.effects.*;
 import gd.rf.acro.ace.entities.BoltEntity;
+import gd.rf.acro.ace.entities.EvilMageEntity;
 import gd.rf.acro.ace.items.*;
 import gd.rf.acro.ace.spells.*;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
+import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -23,17 +29,30 @@ import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.loot.LootTables;
+import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.biome.Biome;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ACE implements ModInitializer {
 
+	private static final List<Identifier> tables = Arrays.asList(
+			LootTables.BURIED_TREASURE_CHEST,
+			LootTables.STRONGHOLD_LIBRARY_CHEST,
+			LootTables.HERO_OF_THE_VILLAGE_CLERIC_GIFT_GAMEPLAY,
+			LootTables.DESERT_PYRAMID_CHEST,
+			LootTables.JUNGLE_TEMPLE_CHEST);
 	public static final Tag<Block> INCINERATABLE = TagRegistry.block(new Identifier("ace","incineratable"));
 	public static final Tag<Item> METALWORKABLE = TagRegistry.item(new Identifier("ace","metalworkable"));
 	public static Logger LOGGER = LogManager.getLogger();
@@ -48,7 +67,7 @@ public class ACE implements ModInitializer {
 		registerItems();
 		registerBlocks();
 		registerEffects();
-
+		registerEntityThings();
 		ServerPlayNetworking.registerGlobalReceiver(ACE.SCROLL_PACKET,(server,serverPlayerEntity,serverPlayNetworkHandler,packetByteBuf,packetSender)->
 		{
 			if(serverPlayerEntity.getMainHandStack().getItem() instanceof SimpleCastingItem)
@@ -67,6 +86,20 @@ public class ACE implements ModInitializer {
 
 			}
 		});
+		LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, id, supplier, setter) -> {
+			if (tables.contains(id))
+			{
+				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder()
+						.withEntry(ItemEntry.builder(ACE.DUSTY_TOME_ITEM).weight(10).build())
+						.withEntry(ItemEntry.builder(ACE.BASIC_WAND).weight(5).build())
+						.withEntry(ItemEntry.builder(ACE.CASTING_ORB).weight(1).build())
+						.withEntry(ItemEntry.builder(ACE.GRIMOIRE).weight(1).build())
+						.withEntry(ItemEntry.builder(ACE.DEMONS_KATAR).weight(1).build())
+						.withEntry(ItemEntry.builder(Items.AIR).weight(50).build());
+
+				supplier.withPool(poolBuilder.build());
+			}
+		});
 
 		LOGGER.log(Level.INFO,Spells.REGISTRY.size()+" spells loaded into ACE, let's go!");
 		LOGGER.log(Level.INFO,Spells.getNerdStats());
@@ -75,11 +108,12 @@ public class ACE implements ModInitializer {
 	}
 
 
-	public static final SpellScrollItem SPELL_SCROLL_ITEM_0 = new SpellScrollItem(new Item.Settings().group(ACE.TAB),new EarthLaunchSpell());
-	public static final SpellScrollItem SPELL_SCROLL_ITEM_1 = new SpellScrollItem(new Item.Settings().group(ACE.TAB),new PushSpell(0.5));
-	public static final SpellScrollItem SPELL_SCROLL_ITEM_2 = new SpellScrollItem(new Item.Settings().group(ACE.TAB),new AirTrapSpell());
+
 	public static final SimpleCastingItem MASTER_SPELL_BOOK = new SimpleCastingItem(new Item.Settings().group(ACE.TAB),100,100,1);
 	public static final SimpleCastingItem BASIC_WAND = new SimpleCastingItem(new Item.Settings().group(ACE.TAB),20,5,1);
+	public static final SimpleCastingItem CASTING_ORB = new SimpleCastingItem(new Item.Settings().group(ACE.TAB),30,5,2);
+	public static final ManalessCastingItem GRIMOIRE = new ManalessCastingItem(new Item.Settings().group(ACE.TAB),5);
+	public static final ManalessCastingItem DEMONS_KATAR = new ManalessCastingItem(new Item.Settings().group(ACE.TAB),5);
 	public static final EarthenPickaxe EARTHEN_PICKAXE = new EarthenPickaxe(1,-2.8f,new Item.Settings().group(ACE.TAB));
 	public static final IceSpikeSword ICE_SPIKE_SWORD = new IceSpikeSword(3,-2,new Item.Settings().group(ACE.TAB));
 	public static final TestItem TEST_ITEM = new TestItem(new Item.Settings().group(ACE.TAB));
@@ -88,9 +122,6 @@ public class ACE implements ModInitializer {
 
 	public void registerItems()
 	{
-		Registry.register(Registry.ITEM,new Identifier("ace","spell_scroll_0"),SPELL_SCROLL_ITEM_0);
-		Registry.register(Registry.ITEM,new Identifier("ace","spell_scroll_1"),SPELL_SCROLL_ITEM_1);
-		Registry.register(Registry.ITEM,new Identifier("ace","spell_scroll_2"),SPELL_SCROLL_ITEM_2);
 		Registry.register(Registry.ITEM,new Identifier("ace","master_spellbook"),MASTER_SPELL_BOOK);
 		Registry.register(Registry.ITEM,new Identifier("ace","earthen_pickaxe"),EARTHEN_PICKAXE);
 		Registry.register(Registry.ITEM,new Identifier("ace","ice_spike"),ICE_SPIKE_SWORD);
@@ -98,6 +129,9 @@ public class ACE implements ModInitializer {
 		Registry.register(Registry.ITEM,new Identifier("ace","spell_compendium"),SPELL_COMPENDIUM);
 		Registry.register(Registry.ITEM,new Identifier("ace","dusty_tome"),DUSTY_TOME_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("ace","basic_wand"),BASIC_WAND);
+		Registry.register(Registry.ITEM,new Identifier("ace","casting_orb"),CASTING_ORB);
+		Registry.register(Registry.ITEM,new Identifier("ace","grimoire"),GRIMOIRE);
+		Registry.register(Registry.ITEM,new Identifier("ace","demons_katar"),DEMONS_KATAR);
 	}
 
 	public static final TrapBlock FIRE_TRAP_BLOCK = new TrapBlock(AbstractBlock.Settings.of(Material.PLANT).luminance((e)->4),"fire");
@@ -146,9 +180,17 @@ public class ACE implements ModInitializer {
 	}
 
 	public static final EntityType<BoltEntity> BOLT_ENTITY_TYPE =registerEntity("bolt",SpawnGroup.MISC,EntityDimensions.changing(0.5f,0.5f),((type, world) -> new BoltEntity(world)));
+	public static final EntityType<EvilMageEntity> EVIL_MAGE_ENTITY_TYPE =registerEntity("evil_mage",SpawnGroup.MONSTER,EntityDimensions.changing(0.6f,1.7f),((type, world) -> new EvilMageEntity(world)));
 
 	public static <T extends Entity> EntityType<T> registerEntity(String name, SpawnGroup category, EntityDimensions size, EntityType.EntityFactory<T> factory) {
 		return Registry.register(Registry.ENTITY_TYPE, new Identifier("ace", name), net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder.create(category, factory).size(size).build());
+	}
+
+	//Things like attributes for alive things and spawning (things)
+	public void registerEntityThings()
+	{
+		FabricDefaultAttributeRegistry.register(ACE.EVIL_MAGE_ENTITY_TYPE,EvilMageEntity.attributes());
+		BiomeModifications.addSpawn(BiomeSelectors.categories(Biome.Category.PLAINS), SpawnGroup.MONSTER, ACE.EVIL_MAGE_ENTITY_TYPE, 20, 1, 3);
 	}
 
 	public static final Identifier SCROLL_PACKET = new Identifier("ace","scroll_packet");

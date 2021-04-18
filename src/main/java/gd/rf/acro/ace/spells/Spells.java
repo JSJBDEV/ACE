@@ -1,7 +1,5 @@
 package gd.rf.acro.ace.spells;
 
-import gd.rf.acro.ace.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,6 +98,9 @@ public class Spells {
     public static final HealosphereSpell HEALOSPHERE_SPELL = new HealosphereSpell();
     public static final MagicCoatSpell MAGIC_COAT_SPELL = new MagicCoatSpell();
     public static final MagicArmourSpell MAGIC_ARMOUR_SPELL = new MagicArmourSpell();
+    public static final MetalworkSpell METALWORK_SPELL = new MetalworkSpell();
+    public static final PartyTrickSpell PARTY_TRICK_SPELL = new PartyTrickSpell();
+    public static final RocketSpell ROCKET_SPELL = new RocketSpell();
 
 
     public static ArrayList<Spell> REGISTRY = new ArrayList<>();
@@ -200,13 +201,16 @@ public class Spells {
         REGISTRY.add(HEALOSPHERE_SPELL);
         REGISTRY.add(MAGIC_COAT_SPELL);
         REGISTRY.add(MAGIC_ARMOUR_SPELL);
+        REGISTRY.add(METALWORK_SPELL);
+        REGISTRY.add(PARTY_TRICK_SPELL);
+        REGISTRY.add(ROCKET_SPELL);
 
     }
 
     public static Spell getSpellByName(String name)
     {
         for (Spell spell : REGISTRY) {
-            if (Utils.getSpellName(spell).equals(name)) {
+            if (spell.name().equals(name)) {
                 return spell;
             }
         }

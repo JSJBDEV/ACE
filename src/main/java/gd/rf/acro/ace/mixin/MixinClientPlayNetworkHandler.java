@@ -28,18 +28,16 @@ public class MixinClientPlayNetworkHandler {
         if (type == ACE.BOLT_ENTITY_TYPE) {
             Entity owner = world.getEntityById(packet.getEntityData());
             BoltEntity toSpawn = new BoltEntity(world, x, y, z);
-            if (owner instanceof PlayerEntity) {
-                toSpawn.setOwner(owner);
-                int id = packet.getId();
-                toSpawn.updateTrackedPosition(x, y, z);
-                toSpawn.pitch = (float)(packet.getPitch() * 360) / 256.0F;
-                toSpawn.yaw = (float)(packet.getYaw() * 360) / 256.0F;
-                toSpawn.setEntityId(id);
+            toSpawn.setOwner(owner);
+            int id = packet.getId();
+            toSpawn.updateTrackedPosition(x, y, z);
+            toSpawn.pitch = (float)(packet.getPitch() * 360) / 256.0F;
+            toSpawn.yaw = (float)(packet.getYaw() * 360) / 256.0F;
+            toSpawn.setEntityId(id);
 
-                toSpawn.setUuid(packet.getUuid());
-                this.world.addEntity(id, toSpawn);
-                ci.cancel();
-            }
+            toSpawn.setUuid(packet.getUuid());
+            this.world.addEntity(id, toSpawn);
+            ci.cancel();
         }
     }
 }

@@ -14,5 +14,9 @@
   "item.ace.ice_spike": "Ice Spike",
   "item.ace.master_spellbook": "Master Spellbook (Creative)",
   "item.ace.dusty_tome": "Dusty Tome",
-  "item.ace.basic_wand": "Stone-Wood Wand"
+  "item.ace.basic_wand": "Stone-Wood Wand",
+  "item.ace.spell_scroll": "Spell Scroll",
+  "item.ace.casting_orb": "Orb of Casting",
+  "item.ace.grimoire": "Grimoire",
+  "item.ace.demon_katar": "Demon's Katar"
 }

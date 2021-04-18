@@ -37,7 +37,7 @@ public abstract class Spell {
 
     public String name()
     {
-        return null;
+        return getClass().getSimpleName();
     }
 
 
