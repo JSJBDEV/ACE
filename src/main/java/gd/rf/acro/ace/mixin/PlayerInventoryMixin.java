@@ -1,6 +1,7 @@
 package gd.rf.acro.ace.mixin;
 
 import gd.rf.acro.ace.ACE;
+import gd.rf.acro.ace.items.IRenderableCastingDevice;
 import gd.rf.acro.ace.items.SimpleCastingItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,7 +36,7 @@ public abstract class PlayerInventoryMixin {
         if (scrollAmount < 0.0D) {
             scrollAmount = -1.0D;
         }
-        if(this.main.get(this.selectedSlot).getItem() instanceof SimpleCastingItem)
+        if(this.main.get(this.selectedSlot).getItem() instanceof IRenderableCastingDevice)
         {
             PacketByteBuf packetByteBuf = PacketByteBufs.create();
             packetByteBuf.writeInt((int) scrollAmount);

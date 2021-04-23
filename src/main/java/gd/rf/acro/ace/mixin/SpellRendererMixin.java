@@ -2,6 +2,7 @@ package gd.rf.acro.ace.mixin;
 
 import gd.rf.acro.ace.ACE;
 import gd.rf.acro.ace.Utils;
+import gd.rf.acro.ace.items.IRenderableCastingDevice;
 import gd.rf.acro.ace.items.SimpleCastingItem;
 import gd.rf.acro.ace.spells.Spell;
 import gd.rf.acro.ace.spells.Spells;
@@ -41,10 +42,10 @@ public abstract class SpellRendererMixin {
         {
             client=MinecraftClient.getInstance();
         }
-        if(client.player.getMainHandStack().getItem() instanceof SimpleCastingItem)
+        if(client.player.getMainHandStack().getItem() instanceof IRenderableCastingDevice)
         {
             ItemStack stack1 = client.player.getMainHandStack();
-            SimpleCastingItem spellBook = (SimpleCastingItem) stack1.getItem();
+            IRenderableCastingDevice spellBook = (IRenderableCastingDevice) stack1.getItem();
             if(spellBook.getEquipped(stack1)!=null)
             {
                 client.textRenderer.drawWithShadow(stack, Utils.getSpellDisplay(spellBook.getEquipped(stack1)),10,scaledHeight-21, 0);
@@ -63,7 +64,9 @@ public abstract class SpellRendererMixin {
     {
 
         CompoundTag tag = stack.getTag();
+        if( tag==null || !tag.contains("maxMana")) return new LiteralText("");
         int manaPerBar = tag.getInt("maxMana")/10;
+        if(manaPerBar==0) return new LiteralText("");
         int mana = tag.getInt("mana");
         LiteralText text = new LiteralText("Mana:");
         for (int i = 0; i < mana/manaPerBar; i++) {

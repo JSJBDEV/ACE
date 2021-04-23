@@ -1,5 +1,6 @@
 package gd.rf.acro.ace.blocks;
 
+import gd.rf.acro.ace.ACE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -20,19 +21,19 @@ public class SeepingIceBlock extends Block {
         super.randomTick(state, world, pos, random);
         if(world.getBlockState(pos.west()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean())
         {
-            world.setBlockState(pos.west(),state);
+            world.setBlockState(pos.west(), ACE.SEEPING_ICE_BLOCK.getDefaultState());
         }
         if(world.getBlockState(pos.east()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean())
         {
-            world.setBlockState(pos.east(),state);
+            world.setBlockState(pos.east(),ACE.SEEPING_ICE_BLOCK.getDefaultState());
         }
         if(world.getBlockState(pos.south()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean())
         {
-            world.setBlockState(pos.south(),state);
+            world.setBlockState(pos.south(),ACE.SEEPING_ICE_BLOCK.getDefaultState());
         }
         if(world.getBlockState(pos.north()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean())
         {
-            world.setBlockState(pos.north(),state);
+            world.setBlockState(pos.north(),ACE.SEEPING_ICE_BLOCK.getDefaultState());
         }
         world.setBlockState(pos,Blocks.PACKED_ICE.getDefaultState());
     }

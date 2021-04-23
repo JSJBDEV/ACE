@@ -35,7 +35,7 @@ public class ResonantFlameSpell extends Spell {
         List<Entity> entities = caster.world.getEntitiesByClass(Entity.class,new Box(caster.getPos().add(-10,-10,-10),caster.getPos().add(10,10,10)),null);
         entities.forEach(entity ->
         {
-            if(!entity.isTeammate(caster))
+            if(!entity.isTeammate(caster) && entity!=caster)
             {
                 if(entity instanceof LivingEntity)
                 {

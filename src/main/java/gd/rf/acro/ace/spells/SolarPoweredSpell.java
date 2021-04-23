@@ -1,9 +1,9 @@
 package gd.rf.acro.ace.spells;
 
-import gd.rf.acro.ace.ACE;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 
-public class MetalworkSpell extends Spell {
+public class SolarPoweredSpell extends Spell {
     @Override
     public String spellType() {
         return "snap";
@@ -16,7 +16,7 @@ public class MetalworkSpell extends Spell {
 
     @Override
     public int tier() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -27,9 +27,12 @@ public class MetalworkSpell extends Spell {
     @Override
     public void snapCast(LivingEntity caster) {
         super.snapCast(caster);
-        if(caster.getOffHandStack().getItem().isIn(ACE.METALWORKABLE))
+        if(caster.world.isSkyVisible(caster.getBlockPos()) && !caster.world.isRaining())
         {
-            caster.getOffHandStack().setDamage(caster.getOffHandStack().getDamage()-5);
+            if(caster instanceof PlayerEntity)
+            {
+                ((PlayerEntity) caster).getHungerManager().add(2,2);
+            }
         }
     }
 }

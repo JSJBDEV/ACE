@@ -17,7 +17,7 @@ public class UndeadenedEffect extends StatusEffect {
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         super.applyUpdateEffect(entity, amplifier);
-        if(entity.world.isSkyVisible(entity.getBlockPos()))
+        if(entity.world.isSkyVisible(entity.getBlockPos()) && entity.world.isDay())
         {
             entity.setOnFireFor(2);
         }

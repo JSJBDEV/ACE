@@ -101,6 +101,10 @@ public class Spells {
     public static final MetalworkSpell METALWORK_SPELL = new MetalworkSpell();
     public static final PartyTrickSpell PARTY_TRICK_SPELL = new PartyTrickSpell();
     public static final RocketSpell ROCKET_SPELL = new RocketSpell();
+    public static final HwachaSpell HWACHA_SPELL = new HwachaSpell();
+    public static final OffYouGoSpell OFF_YOU_GO_SPELL = new OffYouGoSpell();
+    public static final SolarPoweredSpell SOLAR_POWERED_SPELL = new SolarPoweredSpell();
+    public static final IcarusSpell ICARUS_SPELL = new IcarusSpell();
 
 
     public static ArrayList<Spell> REGISTRY = new ArrayList<>();
@@ -204,6 +208,10 @@ public class Spells {
         REGISTRY.add(METALWORK_SPELL);
         REGISTRY.add(PARTY_TRICK_SPELL);
         REGISTRY.add(ROCKET_SPELL);
+        REGISTRY.add(HWACHA_SPELL);
+        REGISTRY.add(OFF_YOU_GO_SPELL);
+        REGISTRY.add(SOLAR_POWERED_SPELL);
+        REGISTRY.add(ICARUS_SPELL);
 
     }
 

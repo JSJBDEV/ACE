@@ -19,7 +19,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.RandomUtils;
 
-public class ManalessCastingItem extends Item {
+public class ManalessCastingItem extends Item implements IRenderableCastingDevice{
 
 
 

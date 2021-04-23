@@ -70,10 +70,10 @@ public class ACE implements ModInitializer {
 		registerEntityThings();
 		ServerPlayNetworking.registerGlobalReceiver(ACE.SCROLL_PACKET,(server,serverPlayerEntity,serverPlayNetworkHandler,packetByteBuf,packetSender)->
 		{
-			if(serverPlayerEntity.getMainHandStack().getItem() instanceof SimpleCastingItem)
+			if(serverPlayerEntity.getMainHandStack().getItem() instanceof IRenderableCastingDevice)
 			{
 				int scroll = packetByteBuf.readInt();
-				SimpleCastingItem spellBook = (SimpleCastingItem) serverPlayerEntity.getMainHandStack().getItem();
+				IRenderableCastingDevice spellBook = (IRenderableCastingDevice) serverPlayerEntity.getMainHandStack().getItem();
 				serverPlayerEntity.playSound(SoundEvents.BLOCK_DISPENSER_FAIL,1,1);
 				if(scroll<0)
 				{
@@ -143,7 +143,7 @@ public class ACE implements ModInitializer {
 	public static final FleetingBlock MAGIC_BLOCK = new FleetingBlock(AbstractBlock.Settings.of(Material.GLASS).nonOpaque().solidBlock((a,b,c)->false).suffocates((a,b,c)->false).blockVision((a,b,c)->false).strength(-1,3600000.0F).luminance(i->10),1000);
 	//LATER: In 1.17 this should be unnecessary
 	public static final Block LIGHT_BLOCK = new Block(AbstractBlock.Settings.of(Material.BARRIER).nonOpaque().noCollision().luminance((a)->15));
-	public static final SeepingIceBlock SEEPING_ICE_BLOCK = new SeepingIceBlock(AbstractBlock.Settings.of(Material.ICE));
+	public static final SeepingIceBlock SEEPING_ICE_BLOCK = new SeepingIceBlock(AbstractBlock.Settings.of(Material.ICE).ticksRandomly());
 	public static final BurntRedstoneBlock BURNT_REDSTONE_BLOCK = new BurntRedstoneBlock(AbstractBlock.Settings.of(Material.REDSTONE_LAMP).noCollision().nonOpaque());
 	public void registerBlocks()
 	{
