@@ -3,6 +3,8 @@ package gd.rf.acro.ace;
 import gd.rf.acro.ace.items.DustyTomeItem;
 import gd.rf.acro.ace.spells.Spell;
 import gd.rf.acro.ace.spells.Spells;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.SpawnerBlock;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.entity.AreaEffectCloudEntity;
@@ -152,6 +154,7 @@ public class Utils {
     }
 
     //Turns the spell class name into normal english
+    @Environment(EnvType.CLIENT)
     public static MutableText getFormattedSpellName(Spell spell)
     {
         String[] r = spell.name().split("(?=\\p{Upper})");
@@ -178,6 +181,7 @@ public class Utils {
     }
 
     //helper method to render on dusty tomes and in hud
+    @Environment(EnvType.CLIENT)
     public static MutableText getSpellDisplay(Spell spell)
     {
         LiteralText text = new LiteralText(" ");
@@ -193,6 +197,7 @@ public class Utils {
 
 
     //gets a procedurally generated icon for a spell including ones I don't add
+    @Environment(EnvType.CLIENT)
     public static MutableText getSpellIcon(Spell spell)
     {
         int spellNumber = (int) getSpellNumber(spell);
@@ -255,7 +260,7 @@ public class Utils {
     public static void modifyDevotionValue(LivingEntity entity,String devotion, int amount)
     {
         Scoreboard scoreboard = entity.world.getScoreboard();
-        if(!scoreboard.containsObjective("ace_"+devotion))
+        if(!scoreboard.getObjectiveNames().contains("ace_"+devotion))
         {
             scoreboard.addObjective("ace_"+devotion, ScoreboardCriterion.DUMMY,new LiteralText("Devotion to "+devotion), ScoreboardCriterion.RenderType.INTEGER);
         }
@@ -264,7 +269,7 @@ public class Utils {
     public static int getDevotionTo(LivingEntity entity, String devotion)
     {
         Scoreboard scoreboard = entity.world.getScoreboard();
-        if(!scoreboard.containsObjective("ace_"+devotion))
+        if(!scoreboard.getObjectiveNames().contains("ace_"+devotion))
         {
             scoreboard.addObjective("ace_"+devotion, ScoreboardCriterion.DUMMY,new LiteralText("Devotion to "+devotion), ScoreboardCriterion.RenderType.INTEGER);
         }

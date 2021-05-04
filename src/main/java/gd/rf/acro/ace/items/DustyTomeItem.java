@@ -30,8 +30,14 @@ public class DustyTomeItem extends Item {
             CompoundTag tag = new CompoundTag();
             tag.putString("spell", Spells.REGISTRY.get(RandomUtils.nextInt(0, Spells.REGISTRY.size())).getClass().getSimpleName());
             stack.setTag(tag);
-            stack.setCustomName(Utils.getSpellDisplay(Spells.getSpellByName(tag.getString("spell"))));
 
+        }
+        if(stack.hasTag() && !stack.hasCustomName())
+        {
+            if(world.isClient)
+            {
+                stack.setCustomName(Utils.getSpellDisplay(Spells.getSpellByName(stack.getTag().getString("spell"))));
+            }
         }
     }
 

@@ -116,8 +116,8 @@ public class ACE implements ModInitializer {
 	public static final ManalessCastingItem DEMONS_KATAR = new ManalessCastingItem(new Item.Settings().group(ACE.TAB),5);
 	public static final EarthenPickaxe EARTHEN_PICKAXE = new EarthenPickaxe(1,-2.8f,new Item.Settings().group(ACE.TAB));
 	public static final IceSpikeSword ICE_SPIKE_SWORD = new IceSpikeSword(3,-2,new Item.Settings().group(ACE.TAB));
-	public static final TestItem TEST_ITEM = new TestItem(new Item.Settings().group(ACE.TAB));
-	public static final SpellCompendium SPELL_COMPENDIUM = new SpellCompendium(new Item.Settings().group(ACE.TAB));
+	public static final TestItem TEST_ITEM = new TestItem(new Item.Settings());
+	public static final SpellCompendium SPELL_COMPENDIUM = new SpellCompendium(new Item.Settings());
 	public static final DustyTomeItem DUSTY_TOME_ITEM =new DustyTomeItem(new Item.Settings().group(ACE.TAB));
 
 	public void registerItems()
@@ -190,7 +190,7 @@ public class ACE implements ModInitializer {
 	public void registerEntityThings()
 	{
 		FabricDefaultAttributeRegistry.register(ACE.EVIL_MAGE_ENTITY_TYPE,EvilMageEntity.attributes());
-		BiomeModifications.addSpawn(BiomeSelectors.categories(Biome.Category.PLAINS), SpawnGroup.MONSTER, ACE.EVIL_MAGE_ENTITY_TYPE, 20, 1, 3);
+		BiomeModifications.addSpawn(BiomeSelectors.categories(Biome.Category.PLAINS), SpawnGroup.MONSTER, ACE.EVIL_MAGE_ENTITY_TYPE, 5, 1, 3);
 	}
 
 	public static final Identifier SCROLL_PACKET = new Identifier("ace","scroll_packet");

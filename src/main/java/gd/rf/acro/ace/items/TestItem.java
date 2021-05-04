@@ -18,23 +18,5 @@ public class TestItem extends Item {
         super(settings);
     }
 
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        user.sendMessage(new LiteralText(Calendar.getDate(world.getLunarTime())),false);
-        if(MinecraftClient.getInstance().getCameraEntity()!=MinecraftClient.getInstance().player && !user.isSneaking())
-        {
-            MinecraftClient.getInstance().setCameraEntity(MinecraftClient.getInstance().player);
-        }
-        return super.use(world, user, hand);
-    }
 
-    @Override
-    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        if(user.world.isClient  && user.isSneaking())
-        {
-            MinecraftClient.getInstance().setCameraEntity(entity);
-
-        }
-        return super.useOnEntity(stack, user, entity, hand);
-    }
 }

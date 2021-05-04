@@ -87,7 +87,7 @@ public class EvilMageEntity extends HostileEntity implements RangedAttackMob {
             String aSpell = all.get(RandomUtils.nextInt(0,all.size())).name();
             spells.add(StringTag.of(aSpell));
         }
-        System.out.println(spells.toString());
+        //System.out.println(spells.toString());
         return entityData;
     }
 }

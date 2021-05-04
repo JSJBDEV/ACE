@@ -36,6 +36,6 @@ public class UpdraftSpell extends Spell {
         super.onTapBlockFace(caster, tapped, direction);
         Utils.createAOE(caster.world,tapped.add(direction.getVector()),
                 Utils.getColourForElement("air"),
-                new StatusEffectInstance(StatusEffects.LEVITATION,100));
+                new StatusEffectInstance(StatusEffects.LEVITATION,50,5));
     }
 }

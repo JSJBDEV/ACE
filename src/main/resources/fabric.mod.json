@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "ace",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Acro's Classical Elements",
+  "description": "A magic mod with 100+ spells",
   "authors": [
-    "Me!"
+    "Acrogenous"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",

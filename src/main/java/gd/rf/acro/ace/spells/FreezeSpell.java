@@ -36,7 +36,7 @@ public class FreezeSpell extends Spell {
                     if(caster.world.getBlockState(tapped.add(i,j,k)).getBlock()== Blocks.WATER
                             || caster.world.getBlockState(tapped.add(i,j,k)).isIn(ACE.INCINERATABLE))
                     {
-                        caster.world.setBlockState(tapped.add(i,j,k), Blocks.ICE.getDefaultState());
+                        caster.world.setBlockState(tapped.add(i,j,k), ACE.FLEETING_ICE.getDefaultState());
                     }
                 }
             }
