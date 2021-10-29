@@ -19,7 +19,7 @@ public class AceClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ACE.FIRE_TRAP_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ACE.MAGIC_BLOCK, RenderLayer.getTranslucent());
 
-        EntityRendererRegistry.INSTANCE.register(ACE.BOLT_ENTITY_TYPE, (entityRenderDispatcher, context) -> new BoltEntityRenderer(entityRenderDispatcher,context.getItemRenderer(),1,false));
-        EntityRendererRegistry.INSTANCE.register(ACE.EVIL_MAGE_ENTITY_TYPE,(dispatcher, context) -> new EvilMageRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(ACE.BOLT_ENTITY_TYPE, (context) -> new BoltEntityRenderer(context.getRenderDispatcher(), context.getItemRenderer(), 1,false));
+        EntityRendererRegistry.INSTANCE.register(ACE.EVIL_MAGE_ENTITY_TYPE,(context) -> new EvilMageRenderer(context.getRenderDispatcher()));
     }
 }
