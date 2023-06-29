@@ -5,30 +5,27 @@ import gd.rf.acro.ace.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.BlockTags;
 
-import java.lang.reflect.UndeclaredThrowableException;
-
-public class IncinerateSpell extends Spell {
+public class IncinerateSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "fire";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 2;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 20;
     }
 

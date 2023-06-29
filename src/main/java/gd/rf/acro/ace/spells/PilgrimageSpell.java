@@ -7,24 +7,24 @@ import net.minecraft.tag.StructureTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-public class PilgrimageSpell extends Spell {
+public class PilgrimageSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "tap";
     }
 
     @Override
-    public String element() {
-        return "earth";
+    public Element getElement() {
+        return EARTH
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

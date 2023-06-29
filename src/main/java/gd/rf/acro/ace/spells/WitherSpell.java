@@ -4,24 +4,24 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 
-public class WitherSpell extends Spell {
+public class WitherSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "touch";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "fire";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

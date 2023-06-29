@@ -4,24 +4,24 @@ import gd.rf.acro.ace.ACE;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 
-public class EarthTrapSpell extends Spell {
+public class EarthTrapSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "tap";
     }
 
     @Override
-    public String element() {
-        return "earth";
+    public Element getElement() {
+        return EARTH
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 10;
     }
 

@@ -1,22 +1,16 @@
 package gd.rf.acro.ace.entities;
 
 import gd.rf.acro.ace.ACE;
-import gd.rf.acro.ace.spells.ShotgunSpell;
-import gd.rf.acro.ace.spells.Spell;
-import gd.rf.acro.ace.spells.Spells;
+import gd.rf.acro.ace.spells.SpellACE;
+import gd.rf.acro.ace.spells.SpellsOld;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.TurtleEntity;
-import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
@@ -54,7 +48,7 @@ public class EvilMageEntity extends HostileEntity implements RangedAttackMob {
 
         if(spells!=null && spells.size()>0)
         {
-            Spell spell = Spells.getSpellByName(spells.get(RandomUtils.nextInt(0,spells.size())).asString());
+            SpellACE spell = SpellsOld.getSpellByName(spells.get(RandomUtils.nextInt(0,spells.size())).asString());
             spell.snapCast(this);
         }
     }
@@ -81,7 +75,7 @@ public class EvilMageEntity extends HostileEntity implements RangedAttackMob {
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, NbtCompound entityTag) {
         entityData = super.initialize(world, difficulty, spawnReason, entityData, entityTag);
         initEquipment(world.getRandom(),difficulty);
-        List<Spell> all = Spells.getSpellsByStyle("snap");
+        List<SpellACE> all = SpellsOld.getSpellsByStyle("snap");
 
         spells=new NbtList();
         spells.add(NbtString.of("EmberSpell"));

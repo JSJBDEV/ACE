@@ -1,36 +1,21 @@
 package gd.rf.acro.ace.spells;
 
+import dev.louis.nebula.spell.SpellType;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
-public class AlchemySpell extends Spell {
-    @Override
-    public String spellType() {
-        return "tap";
+public class AlchemySpell extends TapBlockSpell {
+    public AlchemySpell(SpellType<?> spellType, PlayerEntity caster) {
+        super(spellType, caster);
     }
 
     @Override
-    public String element() {
-        return "earth";
-    }
-
-    @Override
-    public int tier() {
-        return 0;
-    }
-
-    @Override
-    public int cost() {
-        return 0;
-    }
-
-    @Override
-    public void onTapBlock(LivingEntity caster, BlockPos tapped) {
-        super.onTapBlock(caster, tapped);
-        if(caster.world.getBlockState(tapped).getBlock()== Blocks.GLOWSTONE)
-        {
-            caster.world.setBlockState(tapped,Blocks.GOLD_BLOCK.getDefaultState());
+    public void cast() {
+        final var world = getCaster().getWorld();
+        if(world.getBlockState(getBlockPos()).getBlock()== Blocks.GLOWSTONE) {
+            world.setBlockState(getBlockPos(),Blocks.GOLD_BLOCK.getDefaultState());
         }
     }
 }

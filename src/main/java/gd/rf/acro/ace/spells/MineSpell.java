@@ -1,31 +1,27 @@
 package gd.rf.acro.ace.spells;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 
-public class MineSpell extends Spell {
+public class MineSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "tap";
     }
 
     @Override
-    public String element() {
-        return "earth";
+    public Element getElement() {
+        return EARTH
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

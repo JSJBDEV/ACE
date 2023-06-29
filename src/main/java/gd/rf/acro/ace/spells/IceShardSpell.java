@@ -3,28 +3,26 @@ package gd.rf.acro.ace.spells;
 import gd.rf.acro.ace.ACE;
 import gd.rf.acro.ace.entities.BoltEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
 
-public class IceShardSpell extends  Spell {
+public class IceShardSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "water";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 1;
     }
 

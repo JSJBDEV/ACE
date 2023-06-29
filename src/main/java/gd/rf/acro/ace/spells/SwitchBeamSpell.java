@@ -4,24 +4,24 @@ import gd.rf.acro.ace.Utils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 
-public class SwitchBeamSpell extends Spell {
+public class SwitchBeamSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "fire";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

@@ -1,31 +1,28 @@
 package gd.rf.acro.ace.spells;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 
-public class ExtractNutrientsSpell extends Spell {
+public class ExtractNutrientsSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "tap";
     }
 
     @Override
-    public String element() {
-        return "earth";
+    public Element getElement() {
+        return EARTH
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 2;
     }
 

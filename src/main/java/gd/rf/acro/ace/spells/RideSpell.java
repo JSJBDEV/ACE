@@ -2,26 +2,25 @@ package gd.rf.acro.ace.spells;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 
-public class RideSpell extends Spell {
+public class RideSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "touch";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "air";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

@@ -1,27 +1,26 @@
 package gd.rf.acro.ace.spells;
 
 import gd.rf.acro.ace.ACE;
-import gd.rf.acro.ace.Utils;
 import net.minecraft.entity.LivingEntity;
 
-public class DeadlockSpell extends Spell {
+public class DeadlockSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "touch";
     }
 
     @Override
-    public String element() {
-        return "earth";
+    public Element getElement() {
+        return Element.EARTH
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 2;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 30;
     }
 

@@ -1,43 +1,35 @@
 package gd.rf.acro.ace;
 
 import gd.rf.acro.ace.items.DustyTomeItem;
-import gd.rf.acro.ace.spells.Spell;
-import gd.rf.acro.ace.spells.Spells;
+import gd.rf.acro.ace.spells.SpellACE;
+import gd.rf.acro.ace.spells.SpellsOld;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.NoteBlock;
-import net.minecraft.block.SpawnerBlock;
-import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtIntArray;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardCriterion;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.RandomUtils;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +72,7 @@ public class Utils {
 
 
 
-        Vec3f vf = new Vec3f(rgb[0],rgb[1],rgb[2]);
+        Vector3f vf = new Vector3f(rgb[0],rgb[1],rgb[2]);
         LivingEntity livingEntity = getRaycastHit(user,world);
         Random random = new Random();
         if (livingEntity!=null) {
@@ -108,7 +100,7 @@ public class Utils {
     //makes a particle beam to a blockpos
     public static void castBeamToPos(LivingEntity user, BlockPos pos, World world, float[] rgb, float size)
     {
-        Vec3f vf = new Vec3f(rgb[0],rgb[1],rgb[2]);
+        Vector3f vf = new Vector3f(rgb[0],rgb[1],rgb[2]);
         Random random = new Random();
         double d = 1D;
         double e = pos.getX() - user.getBlockPos().getX();
@@ -132,7 +124,7 @@ public class Utils {
     //makes a particle beam between 2 entities
     public static LivingEntity castConnection(LivingEntity user,LivingEntity livingEntity, World world, float[] rgb,int size)
     {
-        Vec3f vf = new Vec3f(rgb[0],rgb[1],rgb[2]);
+        Vector3f vf = new Vector3f(rgb[0],rgb[1],rgb[2]);
         Random random = new Random();
         if (livingEntity!=null) {
             double d = 1D;
@@ -182,7 +174,7 @@ public class Utils {
 
     //Turns the spell class name into normal english
     @Environment(EnvType.CLIENT)
-    public static MutableText getFormattedSpellName(Spell spell)
+    public static MutableText getFormattedSpellName(SpellACE spell)
     {
         String[] r = spell.name().split("(?=\\p{Upper})");
         MutableText text = (MutableText) Text.of( String.join(" ",r));
@@ -190,9 +182,9 @@ public class Utils {
         return text.fillStyle(Style.EMPTY.withBold(false).withItalic(false).withUnderline(false).withColor(TextColor.fromRgb(getSpellColour(spell))));
     }
 
-    public static int getSpellColour(Spell spell)
+    public static int getSpellColour(SpellACE spell)
     {
-        switch (spell.element())
+        switch (spell.getElement())
         {
             case "fire":
                 return Formatting.RED.getColorValue();
@@ -209,7 +201,7 @@ public class Utils {
 
     //helper method to render on dusty tomes and in hud
     @Environment(EnvType.CLIENT)
-    public static MutableText getSpellDisplay(Spell spell)
+    public static MutableText getSpellDisplay(SpellACE spell)
     {
         MutableText text = (MutableText) Text.of(" ");
         text.setStyle(Style.EMPTY.withItalic(false));
@@ -217,7 +209,7 @@ public class Utils {
     }
 
     //A spell description
-    public static String getSpellTranslatable(Spell spell)
+    public static String getSpellTranslatable(SpellACE spell)
     {
         return "ace."+ spell.name()+".desc";
     }
@@ -225,7 +217,7 @@ public class Utils {
 
     //gets a procedurally generated icon for a spell including ones I don't add
     @Environment(EnvType.CLIENT)
-    public static MutableText getSpellIcon(Spell spell)
+    public static MutableText getSpellIcon(SpellACE spell)
     {
         int spellNumber = (int) getSpellNumber(spell);
         String variationSelector = "";
@@ -237,7 +229,7 @@ public class Utils {
         //when I can literally modify minecrafts unicode_page_fe and putting in the symbols we want
         //https://unicode-table.com/en/blocks/alchemical-symbols/
         //https://unicode-table.com/en/blocks/variation-selectors/
-        switch (spell.element())
+        switch (spell.getElement())
         {
             case "fire":
                 variationSelector="︀";
@@ -271,22 +263,22 @@ public class Utils {
         return text;
     }
 
-    public static List<Spell> getSpellsInInventory(PlayerEntity playerEntity)
+    public static List<SpellACE> getSpellsInInventory(PlayerEntity playerEntity)
     {
-        ArrayList<Spell> spells = new ArrayList<>();
+        ArrayList<SpellACE> spells = new ArrayList<>();
         playerEntity.getInventory().main.forEach(stack->
         {
             if(stack.getItem() instanceof DustyTomeItem)
             {
-                spells.add(Spells.getSpellByName(stack.getNbt().getString("spell")));
+                spells.add(SpellsOld.getSpellByName(stack.getNbt().getString("spell")));
             }
         });
         return spells;
     }
 
-    public static void modifyDevotionValue(LivingEntity entity,String devotion, int amount)
+    public static void modifyDevotionValue(LivingEntity entity, SpellACE.Element devotion, int amount)
     {
-        Scoreboard scoreboard = entity.world.getScoreboard();
+        Scoreboard scoreboard = entity.getWorld().getScoreboard();
         if(!scoreboard.getObjectiveNames().contains("ace_"+devotion))
         {
             scoreboard.addObjective("ace_"+devotion, ScoreboardCriterion.DUMMY,Text.of("Devotion to "+devotion), ScoreboardCriterion.RenderType.INTEGER);
@@ -295,7 +287,7 @@ public class Utils {
     }
     public static int getDevotionTo(LivingEntity entity, String devotion)
     {
-        Scoreboard scoreboard = entity.world.getScoreboard();
+        Scoreboard scoreboard = entity.getWorld().getScoreboard();
         if(!scoreboard.getObjectiveNames().contains("ace_"+devotion))
         {
             scoreboard.addObjective("ace_"+devotion, ScoreboardCriterion.DUMMY,Text.of("Devotion to "+devotion), ScoreboardCriterion.RenderType.INTEGER);
@@ -306,7 +298,7 @@ public class Utils {
     //creates an AreaEffectCloud entity (like in dragons breath potions)
     public static void createAOE(World world, BlockPos pos,float[] rgb, StatusEffectInstance effect)
     {
-        Vec3f vf = new Vec3f(rgb[0],rgb[1],rgb[2]);
+        Vector3f vf = new Vector3f(rgb[0],rgb[1],rgb[2]);
         AreaEffectCloudEntity areaEffectCloudEntity = new AreaEffectCloudEntity(world,pos.getX(),pos.getY(),pos.getZ());
         areaEffectCloudEntity.setParticleType(new DustParticleEffect(vf,1));
         areaEffectCloudEntity.setRadius(3.0F);
@@ -317,7 +309,7 @@ public class Utils {
     }
 
     //Congruential number generation because hashcodes change but pseudorandom doesn't
-    public static long getSpellNumber(Spell spell)
+    public static long getSpellNumber(SpellACE spell)
     {
 
         int numbers = spell.name().chars().sum();
@@ -360,7 +352,7 @@ public class Utils {
         if(target!=null && caster!=null && target!=caster && !target.isTeammate(caster))
         {
 
-            target.damage(DamageSource.mob(caster),(float)getMagicScale(caster)+base);
+            target.damage(caster.getWorld().getDamageSources().mobAttack(caster),(float)getMagicScale(caster)+base);
         }
 
     }
@@ -370,7 +362,7 @@ public class Utils {
         double add = 0;
         if(caster!=null && FabricLoader.getInstance().isModLoaded("playerex"))
         {
-            add = caster.getAttributes().getValue(Registry.ATTRIBUTE.get(rd));
+            add = caster.getAttributes().getValue(Registries.ATTRIBUTE.get(rd));
         }
         return add;
     }

@@ -1,30 +1,28 @@
 package gd.rf.acro.ace.spells;
 
 import gd.rf.acro.ace.ACE;
-import gd.rf.acro.ace.effects.WindCallEffect;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 
-public class WindCallSpell extends Spell {
+public class WindCallSpell extends SpellACE {
     int time;
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "air";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 2;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 30;
     }
 

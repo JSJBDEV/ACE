@@ -1,8 +1,6 @@
 package gd.rf.acro.ace.items;
 
-import gd.rf.acro.ace.spells.ConjureFireSpell;
-import gd.rf.acro.ace.spells.FireTrapSpell;
-import gd.rf.acro.ace.spells.Spell;
+import gd.rf.acro.ace.spells.SpellACE;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -14,8 +12,8 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class SpellScrollItem extends Item {
-    Spell store;
-    public SpellScrollItem(Settings settings,Spell spell) {
+    SpellACE store;
+    public SpellScrollItem(Settings settings, SpellACE spell) {
         super(settings);
         store=spell;
     }

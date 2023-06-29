@@ -4,24 +4,24 @@ import gd.rf.acro.ace.ACE;
 import gd.rf.acro.ace.Utils;
 import net.minecraft.entity.LivingEntity;
 
-public class EntrappingBeamSpell extends Spell {
+public class EntrappingBeamSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "air";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 2;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 50;
     }
 

@@ -3,28 +3,27 @@ package gd.rf.acro.ace.spells;
 import gd.rf.acro.ace.ACE;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
-public class DisableRedstoneSpell extends Spell {
+public class DisableRedstoneSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "tap";
     }
 
     @Override
-    public String element() {
-        return "fire";
+    public Element getElement() {
+        return Element.FIRE;
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 2;
     }
 

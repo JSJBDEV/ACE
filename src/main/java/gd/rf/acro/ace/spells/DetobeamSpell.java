@@ -4,24 +4,24 @@ import gd.rf.acro.ace.Utils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.explosion.Explosion;
 
-public class DetobeamSpell extends Spell {
+public class DetobeamSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
-        return "fire";
+    public Element getElement() {
+        return Element.FIRE;
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

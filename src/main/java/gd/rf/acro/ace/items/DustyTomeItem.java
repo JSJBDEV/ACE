@@ -1,8 +1,8 @@
 package gd.rf.acro.ace.items;
 
 import gd.rf.acro.ace.Utils;
-import gd.rf.acro.ace.spells.Spell;
-import gd.rf.acro.ace.spells.Spells;
+import gd.rf.acro.ace.spells.SpellACE;
+import gd.rf.acro.ace.spells.SpellsOld;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -26,7 +26,7 @@ public class DustyTomeItem extends Item {
         super.inventoryTick(stack, world, entity, slot, selected);
         if (!stack.hasNbt()) {
             NbtCompound tag = new NbtCompound();
-            tag.putString("spell", Spells.REGISTRY.get(RandomUtils.nextInt(0, Spells.REGISTRY.size())).getClass().getSimpleName());
+            tag.putString("spell", SpellsOld.REGISTRY.get(RandomUtils.nextInt(0, SpellsOld.REGISTRY.size())).getClass().getSimpleName());
             stack.setNbt(tag);
 
         }
@@ -34,7 +34,7 @@ public class DustyTomeItem extends Item {
         {
             if(world.isClient)
             {
-                stack.setCustomName(Utils.getSpellDisplay(Spells.getSpellByName(stack.getNbt().getString("spell"))));
+                stack.setCustomName(Utils.getSpellDisplay(SpellsOld.getSpellByName(stack.getNbt().getString("spell"))));
             }
         }
     }
@@ -45,11 +45,11 @@ public class DustyTomeItem extends Item {
         if(stack.hasNbt())
         {
             //TODO: check this and maybe add a way of turning it off - or simply show this information by opening a screen
-            Spell spell = Spells.getSpellByName(stack.getNbt().getString("spell"));
-            tooltip.add(Text.of("Casting Type: "+spell.spellType()));
-            tooltip.add(Text.of("Element: "+spell.element()));
-            tooltip.add(Text.of("Mana Cost: "+spell.cost()));
-            tooltip.add(Text.of("Tier: "+spell.tier()));
+            SpellACE spell = SpellsOld.getSpellByName(stack.getNbt().getString("spell"));
+            tooltip.add(Text.of("Casting Type: "+spell.getCastingType()));
+            tooltip.add(Text.of("Element: "+spell.getElement()));
+            tooltip.add(Text.of("Mana Cost: "+spell.getManaCost()));
+            tooltip.add(Text.of("Tier: "+spell.getTier()));
             tooltip.add(Text.translatable(Utils.getSpellTranslatable(spell)));
         }
         else
