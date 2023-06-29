@@ -27,7 +27,7 @@ public class CastSnapSpellGoal<T extends HostileEntity & RangedAttackMob> extend
         this.speed = speed;
         this.attackInterval = attackInterval;
         this.squaredRange = range * range;
-        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
+        this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
     }
 
     public void setAttackInterval(int attackInterval) {

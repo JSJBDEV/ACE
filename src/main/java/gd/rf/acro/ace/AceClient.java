@@ -4,9 +4,12 @@ import gd.rf.acro.ace.entities.BoltEntityRenderer;
 import gd.rf.acro.ace.entities.EvilMageRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 
 public class AceClient implements ClientModInitializer {
     @Override
@@ -19,7 +22,8 @@ public class AceClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ACE.FIRE_TRAP_BLOCK, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ACE.MAGIC_BLOCK, RenderLayer.getTranslucent());
 
-        EntityRendererRegistry.INSTANCE.register(ACE.BOLT_ENTITY_TYPE, (context) -> new BoltEntityRenderer(context.getRenderDispatcher(), context.getItemRenderer(), 1,false));
-        EntityRendererRegistry.INSTANCE.register(ACE.EVIL_MAGE_ENTITY_TYPE,(context) -> new EvilMageRenderer(context.getRenderDispatcher()));
+
+        EntityRendererRegistry.register(ACE.BOLT_ENTITY_TYPE, (context) -> new BoltEntityRenderer(context, 1,false));
+        EntityRendererRegistry.register(ACE.EVIL_MAGE_ENTITY_TYPE, EvilMageRenderer::new);
     }
 }

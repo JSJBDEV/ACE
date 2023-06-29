@@ -3,8 +3,8 @@ package gd.rf.acro.ace.items;
 import gd.rf.acro.ace.spells.Spell;
 import gd.rf.acro.ace.spells.Spells;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 
 public interface IRenderableCastingDevice {
     Spell getEquipped(ItemStack stack);

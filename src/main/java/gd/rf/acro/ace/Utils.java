@@ -5,26 +5,37 @@ import gd.rf.acro.ace.spells.Spell;
 import gd.rf.acro.ace.spells.Spells;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.NoteBlock;
 import net.minecraft.block.SpawnerBlock;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntArrayTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtIntArray;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardCriterion;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.RandomUtils;
 
@@ -38,6 +49,7 @@ public class Utils {
     //random but it can process minus numbers, useful for coordinates
     public static int random(int min, int max)
     {
+
         if(min<0)
         {
             return (RandomUtils.nextInt(0,max+Math.abs(min))-Math.abs(min));
@@ -65,6 +77,10 @@ public class Utils {
     //makes a particle beam using a raycast
     public static LivingEntity castBeam(LivingEntity user, World world, float[] rgb,float size)
     {
+
+
+
+        Vec3f vf = new Vec3f(rgb[0],rgb[1],rgb[2]);
         LivingEntity livingEntity = getRaycastHit(user,world);
         Random random = new Random();
         if (livingEntity!=null) {
@@ -80,8 +96,11 @@ public class Utils {
 
             while(j < h) {
                 j += 1.8D - d + random.nextDouble() * (1.7D - d);
-                world.addParticle(new DustParticleEffect(rgb[0],rgb[1],rgb[2],size), user.getBlockPos().getX() + e * j, user.getEyeY() + f * j, user.getBlockPos().getZ() + g * j, 0.0D, 0.0D, 0.0D);
-
+                if(!world.isClient)
+                {
+                    ServerWorld sw = (ServerWorld) world;
+                    sw.spawnParticles(new DustParticleEffect(vf,size), user.getBlockPos().getX() + e * j, user.getEyeY() + f * j, user.getBlockPos().getZ() + g * j, 5, 0.0D, 0.0D,0,0);
+                }
             }
         }
         return livingEntity;
@@ -89,6 +108,7 @@ public class Utils {
     //makes a particle beam to a blockpos
     public static void castBeamToPos(LivingEntity user, BlockPos pos, World world, float[] rgb, float size)
     {
+        Vec3f vf = new Vec3f(rgb[0],rgb[1],rgb[2]);
         Random random = new Random();
         double d = 1D;
         double e = pos.getX() - user.getBlockPos().getX();
@@ -102,13 +122,17 @@ public class Utils {
 
         while(j < h) {
             j += 1.8D - d + random.nextDouble() * (1.7D - d);
-            world.addParticle(new DustParticleEffect(rgb[0],rgb[1],rgb[2],size), user.getBlockPos().getX() + e * j, user.getEyeY() + f * j, user.getBlockPos().getZ() + g * j, 0.0D, 0.0D, 0.0D);
-
+            if(!world.isClient)
+            {
+                ServerWorld sw = (ServerWorld) world;
+                sw.spawnParticles(new DustParticleEffect(vf,size), user.getBlockPos().getX() + e * j, user.getEyeY() + f * j, user.getBlockPos().getZ() + g * j, 5, 0.0D, 0.0D,0,0);
+            }
         }
     }
     //makes a particle beam between 2 entities
     public static LivingEntity castConnection(LivingEntity user,LivingEntity livingEntity, World world, float[] rgb,int size)
     {
+        Vec3f vf = new Vec3f(rgb[0],rgb[1],rgb[2]);
         Random random = new Random();
         if (livingEntity!=null) {
             double d = 1D;
@@ -123,8 +147,11 @@ public class Utils {
 
             while(j < h) {
                 j += 1.8D - d + random.nextDouble() * (1.7D - d);
-                world.addParticle(new DustParticleEffect(rgb[0],rgb[1],rgb[2],size), user.getBlockPos().getX() + e * j, user.getEyeY() + f * j, user.getBlockPos().getZ() + g * j, 0.0D, 0.0D, 0.0D);
-
+                if(!world.isClient)
+                {
+                    ServerWorld sw = (ServerWorld) world;
+                    sw.spawnParticles(new DustParticleEffect(vf,size), user.getBlockPos().getX() + e * j, user.getEyeY() + f * j, user.getBlockPos().getZ() + g * j, 5, 0.0D, 0.0D,0,0);
+                }
             }
         }
         return livingEntity;
@@ -158,9 +185,9 @@ public class Utils {
     public static MutableText getFormattedSpellName(Spell spell)
     {
         String[] r = spell.name().split("(?=\\p{Upper})");
-        LiteralText text = new LiteralText( String.join(" ",r));
+        MutableText text = (MutableText) Text.of( String.join(" ",r));
 
-        return text.setStyle(Style.EMPTY.withBold(false).withItalic(false).withUnderline(false).withColor(TextColor.fromRgb(getSpellColour(spell))));
+        return text.fillStyle(Style.EMPTY.withBold(false).withItalic(false).withUnderline(false).withColor(TextColor.fromRgb(getSpellColour(spell))));
     }
 
     public static int getSpellColour(Spell spell)
@@ -184,7 +211,7 @@ public class Utils {
     @Environment(EnvType.CLIENT)
     public static MutableText getSpellDisplay(Spell spell)
     {
-        LiteralText text = new LiteralText(" ");
+        MutableText text = (MutableText) Text.of(" ");
         text.setStyle(Style.EMPTY.withItalic(false));
         return text.append(Utils.getSpellIcon(spell)).append(Utils.getFormattedSpellName(spell));
     }
@@ -225,7 +252,7 @@ public class Utils {
                 variationSelector="︃";
                 break;
         }
-        LiteralText text = new LiteralText(variationSelector);
+        MutableText text = (MutableText) Text.of(variationSelector);
         Style style = Style.EMPTY;
         style = style.withColor(TextColor.fromRgb(spellNumber));
         if(spellNumber%5==0)
@@ -247,11 +274,11 @@ public class Utils {
     public static List<Spell> getSpellsInInventory(PlayerEntity playerEntity)
     {
         ArrayList<Spell> spells = new ArrayList<>();
-        playerEntity.inventory.main.forEach(stack->
+        playerEntity.getInventory().main.forEach(stack->
         {
             if(stack.getItem() instanceof DustyTomeItem)
             {
-                spells.add(Spells.getSpellByName(stack.getTag().getString("spell")));
+                spells.add(Spells.getSpellByName(stack.getNbt().getString("spell")));
             }
         });
         return spells;
@@ -262,7 +289,7 @@ public class Utils {
         Scoreboard scoreboard = entity.world.getScoreboard();
         if(!scoreboard.getObjectiveNames().contains("ace_"+devotion))
         {
-            scoreboard.addObjective("ace_"+devotion, ScoreboardCriterion.DUMMY,new LiteralText("Devotion to "+devotion), ScoreboardCriterion.RenderType.INTEGER);
+            scoreboard.addObjective("ace_"+devotion, ScoreboardCriterion.DUMMY,Text.of("Devotion to "+devotion), ScoreboardCriterion.RenderType.INTEGER);
         }
         scoreboard.getPlayerScore(entity.getUuidAsString(),scoreboard.getObjective("ace_"+devotion)).incrementScore(amount);
     }
@@ -271,7 +298,7 @@ public class Utils {
         Scoreboard scoreboard = entity.world.getScoreboard();
         if(!scoreboard.getObjectiveNames().contains("ace_"+devotion))
         {
-            scoreboard.addObjective("ace_"+devotion, ScoreboardCriterion.DUMMY,new LiteralText("Devotion to "+devotion), ScoreboardCriterion.RenderType.INTEGER);
+            scoreboard.addObjective("ace_"+devotion, ScoreboardCriterion.DUMMY,Text.of("Devotion to "+devotion), ScoreboardCriterion.RenderType.INTEGER);
         }
         return scoreboard.getPlayerScore(entity.getUuidAsString(),scoreboard.getObjective("ace_"+devotion)).getScore();
     }
@@ -279,8 +306,9 @@ public class Utils {
     //creates an AreaEffectCloud entity (like in dragons breath potions)
     public static void createAOE(World world, BlockPos pos,float[] rgb, StatusEffectInstance effect)
     {
+        Vec3f vf = new Vec3f(rgb[0],rgb[1],rgb[2]);
         AreaEffectCloudEntity areaEffectCloudEntity = new AreaEffectCloudEntity(world,pos.getX(),pos.getY(),pos.getZ());
-        areaEffectCloudEntity.setParticleType(new DustParticleEffect(rgb[0],rgb[1],rgb[2],1));
+        areaEffectCloudEntity.setParticleType(new DustParticleEffect(vf,1));
         areaEffectCloudEntity.setRadius(3.0F);
         areaEffectCloudEntity.setDuration(200);
         areaEffectCloudEntity.setRadiusGrowth((7.0F - areaEffectCloudEntity.getRadius()) / (float)areaEffectCloudEntity.getDuration());
@@ -299,10 +327,10 @@ public class Utils {
     public static ItemStack createRocketStack()
     {
         ItemStack stack = new ItemStack(Items.FIREWORK_ROCKET);
-        CompoundTag tag = new CompoundTag();
-        ListTag explosions = new ListTag();
+        NbtCompound tag = new NbtCompound();
+        NbtList explosions = new NbtList();
         for (int i = 0; i < RandomUtils.nextInt(1,7); i++) {
-            CompoundTag explosion = new CompoundTag();
+            NbtCompound explosion = new NbtCompound();
             explosion.putBoolean("Flicker",RandomUtils.nextBoolean());
             explosion.putBoolean("Trail",RandomUtils.nextBoolean());
             explosion.putInt("Type",RandomUtils.nextInt(0,5));
@@ -312,9 +340,9 @@ public class Utils {
         }
         tag.put("Explosions",explosions);
         tag.putInt("Flight",Utils.random(-5,5));
-        CompoundTag fireworks = new CompoundTag();
+        NbtCompound fireworks = new NbtCompound();
         fireworks.put("Fireworks",tag);
-        stack.setTag(fireworks);
+        stack.setNbt(fireworks);
         return stack;
     }
     public static List<Integer> genColourList(int length)
@@ -325,6 +353,26 @@ public class Utils {
         }
 
         return colours;
+    }
+    private static final Identifier rd = new Identifier("playerex:ranged_damage");
+    public static void applyMagicModDamage(LivingEntity caster, Entity target, float base)
+    {
+        if(target!=null && caster!=null && target!=caster && !target.isTeammate(caster))
+        {
+
+            target.damage(DamageSource.mob(caster),(float)getMagicScale(caster)+base);
+        }
+
+    }
+
+    public static double getMagicScale(LivingEntity caster)
+    {
+        double add = 0;
+        if(caster!=null && FabricLoader.getInstance().isModLoaded("playerex"))
+        {
+            add = caster.getAttributes().getValue(Registry.ATTRIBUTE.get(rd));
+        }
+        return add;
     }
 
 }

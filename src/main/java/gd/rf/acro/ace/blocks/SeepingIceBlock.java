@@ -17,7 +17,7 @@ public class SeepingIceBlock extends Block {
     }
 
     @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, net.minecraft.util.math.random.Random random) {
         super.randomTick(state, world, pos, random);
         if(world.getBlockState(pos.west()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean())
         {

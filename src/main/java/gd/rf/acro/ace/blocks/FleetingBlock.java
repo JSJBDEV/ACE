@@ -6,6 +6,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.tick.OrderedTick;
 
 import java.util.Random;
 
@@ -21,7 +22,7 @@ public class FleetingBlock extends Block {
     }
 
     @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, net.minecraft.util.math.random.Random random) {
         super.scheduledTick(state, world, pos, random);
         world.setBlockState(pos, Blocks.AIR.getDefaultState());
     }
@@ -29,6 +30,6 @@ public class FleetingBlock extends Block {
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         super.onBlockAdded(state, world, pos, oldState, notify);
-        world.getBlockTickScheduler().schedule(pos,this,fleet);
+        world.createAndScheduleBlockTick(pos,this,fleet);
     }
 }

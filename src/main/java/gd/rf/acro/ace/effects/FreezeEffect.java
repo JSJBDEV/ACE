@@ -6,12 +6,15 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
+
 
 public class FreezeEffect extends StatusEffect {
-    public FreezeEffect(StatusEffectType type, int color) {
-        super(type, color);
+
+    public FreezeEffect(StatusEffectCategory category, int color) {
+        super(category, color);
     }
+
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         super.applyUpdateEffect(entity, amplifier);

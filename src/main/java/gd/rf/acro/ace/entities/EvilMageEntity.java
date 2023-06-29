@@ -17,9 +17,10 @@ import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -28,7 +29,7 @@ import org.apache.commons.lang3.RandomUtils;
 import java.util.List;
 
 public class EvilMageEntity extends HostileEntity implements RangedAttackMob {
-    private ListTag spells;
+    private NbtList spells;
 
     public EvilMageEntity(World world) {
         super(ACE.EVIL_MAGE_ENTITY_TYPE, world);
@@ -42,7 +43,7 @@ public class EvilMageEntity extends HostileEntity implements RangedAttackMob {
         this.goalSelector.add(6, new LookAroundGoal(this));
         this.goalSelector.add(4, new CastSnapSpellGoal<>(this,1.0D, 20, 15.0F));
         this.targetSelector.add(1, new RevengeGoal(this, new Class[0]));
-        this.targetSelector.add(2, new FollowTargetGoal(this, PlayerEntity.class, true));
+        this.targetSelector.add(3, new ActiveTargetGoal(this, PlayerEntity.class, true));
     }
     public static DefaultAttributeContainer.Builder attributes() {
         return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2D);
@@ -57,37 +58,38 @@ public class EvilMageEntity extends HostileEntity implements RangedAttackMob {
             spell.snapCast(this);
         }
     }
-    protected void initEquipment(LocalDifficulty difficulty) {
-        super.initEquipment(difficulty);
+
+    @Override
+    protected void initEquipment(Random random, LocalDifficulty localDifficulty) {
+        super.initEquipment(random, localDifficulty);
         this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(ACE.BASIC_WAND));
-
     }
 
     @Override
-    public void writeCustomDataToTag(CompoundTag tag) {
-        super.writeCustomDataToTag(tag);
-        tag.put("spells",spells);
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.put("spells",spells);
     }
 
     @Override
-    public void readCustomDataFromTag(CompoundTag tag) {
-        super.readCustomDataFromTag(tag);
-        spells= (ListTag) tag.get("spells");
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        spells= (NbtList) nbt.get("spells");
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, CompoundTag entityTag) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, NbtCompound entityTag) {
         entityData = super.initialize(world, difficulty, spawnReason, entityData, entityTag);
-        initEquipment(difficulty);
+        initEquipment(world.getRandom(),difficulty);
         List<Spell> all = Spells.getSpellsByStyle("snap");
 
-        spells=new ListTag();
-        spells.add(StringTag.of("EmberSpell"));
+        spells=new NbtList();
+        spells.add(NbtString.of("EmberSpell"));
         for (int i = 0; i < 5; i++) {
             String aSpell = all.get(RandomUtils.nextInt(0,all.size())).name();
-            spells.add(StringTag.of(aSpell));
+            spells.add(NbtString.of(aSpell));
         }
-        //System.out.println(spells.toString());
+        System.out.println(spells);
         return entityData;
     }
 }

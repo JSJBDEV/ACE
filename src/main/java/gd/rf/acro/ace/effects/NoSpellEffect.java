@@ -1,10 +1,12 @@
 package gd.rf.acro.ace.effects;
 
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
+
 
 public class NoSpellEffect extends StatusEffect {
-    public NoSpellEffect(StatusEffectType type, int color) {
-        super(type, color);
+
+    public NoSpellEffect(StatusEffectCategory category, int color) {
+        super(category, color);
     }
 }

@@ -3,13 +3,15 @@ package gd.rf.acro.ace.effects;
 import gd.rf.acro.ace.ACE;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.entity.effect.StatusEffects;
 
 public class AerialEffect extends StatusEffect {
-    public AerialEffect(StatusEffectType type, int color) {
-        super(type, color);
+
+
+    public AerialEffect(StatusEffectCategory category, int color) {
+        super(category, color);
     }
 
     @Override

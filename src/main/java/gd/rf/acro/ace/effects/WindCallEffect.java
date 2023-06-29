@@ -3,12 +3,14 @@ package gd.rf.acro.ace.effects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class WindCallEffect extends StatusEffect {
-    public WindCallEffect(StatusEffectType type, int color) {
-        super(type, color);
+
+
+    public WindCallEffect(StatusEffectCategory category, int color) {
+        super(category, color);
     }
 
     @Override
@@ -17,8 +19,8 @@ public class WindCallEffect extends StatusEffect {
         if(entity instanceof PlayerEntity)
         {
             PlayerEntity playerEntity = (PlayerEntity) entity;
-            playerEntity.abilities.allowFlying=true;
-            playerEntity.abilities.flying=true;
+            playerEntity.getAbilities().allowFlying=true;
+            playerEntity.getAbilities().flying=true;
             playerEntity.sendAbilitiesUpdate();
         }
     }
@@ -29,8 +31,8 @@ public class WindCallEffect extends StatusEffect {
         if(entity instanceof PlayerEntity)
         {
             PlayerEntity playerEntity = (PlayerEntity) entity;
-            playerEntity.abilities.allowFlying=false;
-            playerEntity.abilities.flying=false;
+            playerEntity.getAbilities().allowFlying=false;
+            playerEntity.getAbilities().flying=false;
             playerEntity.sendAbilitiesUpdate();
         }
     }

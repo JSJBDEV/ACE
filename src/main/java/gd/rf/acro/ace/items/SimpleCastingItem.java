@@ -9,9 +9,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -36,9 +36,9 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
         //This bit is to add spells to your casting device
         if(user.getOffHandStack().getItem() instanceof DustyTomeItem)
         {
-            CompoundTag tag = user.getMainHandStack().getTag();
-            Spell onBook = Spells.getSpellByName(user.getOffHandStack().getTag().getString("spell"));
-            ListTag spells = (ListTag) tag.get("spellsEquipped");
+            NbtCompound tag = user.getMainHandStack().getNbt();
+            Spell onBook = Spells.getSpellByName(user.getOffHandStack().getNbt().getString("spell"));
+            NbtList spells = (NbtList) tag.get("spellsEquipped");
             if(spells.size()<tag.getInt("maxSpells"))
             {
                 addSpell(user.getMainHandStack(),onBook);
@@ -57,12 +57,12 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
         Spell spell = getEquipped(user.getStackInHand(hand));
         if(spell!=null && hand==Hand.MAIN_HAND && spell.spellType().contains("snap"))
         {
-            CompoundTag tag = user.getStackInHand(hand).getTag();
+            NbtCompound tag = user.getStackInHand(hand).getNbt();
             if(tag.getInt("mana")>spell.cost())
             {
                 spell.snapCast(user);
                 tag.putInt("mana",tag.getInt("mana")-spell.cost());
-                user.getStackInHand(hand).setTag(tag);
+                user.getStackInHand(hand).setNbt(tag);
             }
 
         }
@@ -74,12 +74,12 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
         Spell spell = getEquipped(stack);
         if(spell!=null && hand==Hand.MAIN_HAND && spell.spellType().contains("touch"))
         {
-            CompoundTag tag = stack.getTag();
+            NbtCompound tag = stack.getNbt();
             if(tag.getInt("mana")>spell.cost())
             {
                 spell.onTouchCast(user,entity);
                 tag.putInt("mana",tag.getInt("mana")-spell.cost());
-                stack.setTag(tag);
+                stack.setNbt(tag);
             }
         }
         return super.useOnEntity(stack, user, entity, hand);
@@ -90,13 +90,13 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
         Spell spell = getEquipped(context.getStack());
         if(spell!=null && context.getHand()==Hand.MAIN_HAND && spell.spellType().contains("tap"))
         {
-            CompoundTag tag = context.getStack().getTag();
+            NbtCompound tag = context.getStack().getNbt();
             if(tag.getInt("mana")>spell.cost())
             {
                 spell.onTapBlock(context.getPlayer(),context.getBlockPos());
                 spell.onTapBlockFace(context.getPlayer(),context.getBlockPos(),context.getSide());
                 tag.putInt("mana",tag.getInt("mana")-spell.cost());
-                context.getStack().setTag(tag);
+                context.getStack().setNbt(tag);
             }
 
         }
@@ -105,11 +105,11 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
 
 
     public Spell getEquipped(ItemStack stack) {
-        if(stack.hasTag() && stack.getTag().contains("spellsEquipped"))
+        if(stack.hasNbt() && stack.getNbt().contains("spellsEquipped"))
         {
-            CompoundTag tag = stack.getTag();
+            NbtCompound tag = stack.getNbt();
 
-            ListTag spells = (ListTag) tag.get("spellsEquipped");
+            NbtList spells = (NbtList) tag.get("spellsEquipped");
             return Spells.getSpellByName(spells.getString(tag.getInt("selected")));
         }
         return null;
@@ -119,37 +119,37 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-        CompoundTag tag = new CompoundTag();
-        if(!stack.hasTag())
+        NbtCompound tag = new NbtCompound();
+        if(!stack.hasNbt())
         {
 
             tag.putInt("selected",0);
-            ListTag list = new ListTag();
+            NbtList list = new NbtList();
             tag.put("spellsEquipped",list);
             tag.putInt("maxSpells",maxSpells);
             tag.putInt("mana",mana);
             tag.putInt("maxMana",mana);
             tag.putInt("manaRegen",manaRegen);
-            stack.setTag(tag);
+            stack.setNbt(tag);
             if(stack.getItem()== ACE.MASTER_SPELL_BOOK)
             {
                 addSpell(stack, Spells.REGISTRY.toArray(new Spell[]{}));
             }
         }
-        tag=stack.getTag();
+        tag=stack.getNbt();
         //mana regen (per second)
         if(world.getTimeOfDay()%20L==0L)
         {
             tag.putInt("mana", Math.min(tag.getInt("mana") + tag.getInt("manaRegen"), tag.getInt("maxMana")));
-            stack.setTag(tag);
+            stack.setNbt(tag);
         }
 
     }
 
     public void scrollMinus(ItemStack stack)
     {
-        CompoundTag tag = stack.getTag();
-        ListTag spells = (ListTag) tag.get("spellsEquipped");
+        NbtCompound tag = stack.getNbt();
+        NbtList spells = (NbtList) tag.get("spellsEquipped");
 
         if(tag.getInt("selected")>0)
         {
@@ -159,12 +159,12 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
         {
             tag.putInt("selected", spells.size()-1);
         }
-        stack.setTag(tag);
+        stack.setNbt(tag);
     }
     public void scrollPlus(ItemStack stack)
     {
-        CompoundTag tag = stack.getTag();
-        ListTag spells = (ListTag) tag.get("spellsEquipped");
+        NbtCompound tag = stack.getNbt();
+        NbtList spells = (NbtList) tag.get("spellsEquipped");
         if(tag.getInt("selected")< spells.size()-1)
         {
             tag.putInt("selected",tag.getInt("selected")+1);
@@ -173,14 +173,14 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
         {
             tag.putInt("selected",0);
         }
-        stack.setTag(tag);
+        stack.setNbt(tag);
 
     }
     public void addSpell(ItemStack stack,Spell... spell)
     {
 
-        CompoundTag tag = stack.getTag();
-        ListTag spells = (ListTag) tag.get("spellsEquipped");
+        NbtCompound tag = stack.getNbt();
+        NbtList spells = (NbtList) tag.get("spellsEquipped");
 
         if(spell.length>0)
         {
@@ -188,27 +188,27 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
             {
                 if(spells.size()<tag.getInt("maxSpells"))
                 {
-                    spells.add(StringTag.of(spell[i].name()));
+                    spells.add(NbtString.of(spell[i].name()));
                 }
             }
 
         }
         System.out.println(spells.toString());
         tag.put("spellsEquipped",spells);
-        stack.setTag(tag);
+        stack.setNbt(tag);
 
 
     }
     public void removeSpell(ItemStack stack, Spell spell)
     {
-        CompoundTag tag = stack.getTag();
-        ListTag spells = (ListTag) tag.get("spellsEquipped");
+        NbtCompound tag = stack.getNbt();
+        NbtList spells = (NbtList) tag.get("spellsEquipped");
         for (int i = 0; i < spells.size(); i++) {
             if(spells.getString(i).equals(spell.name()))
             {
                 spells.remove(i);
                 tag.put("spellsEqipped",spells);
-                stack.setTag(tag);
+                stack.setNbt(tag);
                 return;
             }
         }

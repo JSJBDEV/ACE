@@ -10,9 +10,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -37,9 +37,9 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
         //This bit is to add spells to your casting device
         if(user.getOffHandStack().getItem() instanceof DustyTomeItem && user.getMainHandStack().getItem()!=ACE.GRIMOIRE)
         {
-            CompoundTag tag = user.getMainHandStack().getTag();
-            Spell onBook = Spells.getSpellByName(user.getOffHandStack().getTag().getString("spell"));
-            ListTag spells = (ListTag) tag.get("spellsEquipped");
+            NbtCompound tag = user.getMainHandStack().getNbt();
+            Spell onBook = Spells.getSpellByName(user.getOffHandStack().getNbt().getString("spell"));
+            NbtList spells = (NbtList) tag.get("spellsEquipped");
             if(spells.size()<tag.getInt("maxSpells"))
             {
                 addSpell(user.getMainHandStack(),onBook);
@@ -101,11 +101,11 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
 
 
     public Spell getEquipped(ItemStack stack) {
-        if(stack.hasTag() && stack.getTag().contains("spellsEquipped"))
+        if(stack.hasNbt() && stack.getNbt().contains("spellsEquipped"))
         {
-            CompoundTag tag = stack.getTag();
+            NbtCompound tag = stack.getNbt();
 
-            ListTag spells = (ListTag) tag.get("spellsEquipped");
+            NbtList spells = (NbtList) tag.get("spellsEquipped");
             return Spells.getSpellByName(spells.getString(tag.getInt("selected")));
         }
         return null;
@@ -115,15 +115,15 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-        CompoundTag tag = new CompoundTag();
-        if(!stack.hasTag())
+        NbtCompound tag = new NbtCompound();
+        if(!stack.hasNbt())
         {
 
             tag.putInt("selected",0);
-            ListTag list = new ListTag();
+            NbtList list = new NbtList();
             tag.put("spellsEquipped",list);
             tag.putInt("maxSpells",maxSpells);
-            stack.setTag(tag);
+            stack.setNbt(tag);
             if(stack.getItem()== ACE.GRIMOIRE)
             {
                 addSpell(stack,Spells.REGISTRY.get(RandomUtils.nextInt(0,Spells.REGISTRY.size())));
@@ -133,20 +133,20 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
                 addSpell(stack,Spells.REGISTRY.get(RandomUtils.nextInt(0,Spells.REGISTRY.size())));
             }
         }
-        tag=stack.getTag();
+        tag=stack.getNbt();
         //mana regen (per second)
         if(world.getTimeOfDay()%20L==0L)
         {
             tag.putInt("mana", Math.min(tag.getInt("mana") + tag.getInt("manaRegen"), tag.getInt("maxMana")));
-            stack.setTag(tag);
+            stack.setNbt(tag);
         }
 
     }
 
     public void scrollMinus(ItemStack stack)
     {
-        CompoundTag tag = stack.getTag();
-        ListTag spells = (ListTag) tag.get("spellsEquipped");
+        NbtCompound tag = stack.getNbt();
+        NbtList spells = (NbtList) tag.get("spellsEquipped");
 
         if(tag.getInt("selected")>0)
         {
@@ -156,12 +156,12 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
         {
             tag.putInt("selected", spells.size()-1);
         }
-        stack.setTag(tag);
+        stack.setNbt(tag);
     }
     public void scrollPlus(ItemStack stack)
     {
-        CompoundTag tag = stack.getTag();
-        ListTag spells = (ListTag) tag.get("spellsEquipped");
+        NbtCompound tag = stack.getNbt();
+        NbtList spells = (NbtList) tag.get("spellsEquipped");
         if(tag.getInt("selected")< spells.size()-1)
         {
             tag.putInt("selected",tag.getInt("selected")+1);
@@ -170,14 +170,14 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
         {
             tag.putInt("selected",0);
         }
-        stack.setTag(tag);
+        stack.setNbt(tag);
 
     }
     public void addSpell(ItemStack stack,Spell... spell)
     {
 
-        CompoundTag tag = stack.getTag();
-        ListTag spells = (ListTag) tag.get("spellsEquipped");
+        NbtCompound tag = stack.getNbt();
+        NbtList spells = (NbtList) tag.get("spellsEquipped");
 
         if(spell.length>0)
         {
@@ -185,27 +185,27 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
             {
                 if(spells.size()<tag.getInt("maxSpells"))
                 {
-                    spells.add(StringTag.of(spell[i].name()));
+                    spells.add(NbtString.of(spell[i].name()));
                 }
             }
 
         }
         System.out.println(spells.toString());
         tag.put("spellsEquipped",spells);
-        stack.setTag(tag);
+        stack.setNbt(tag);
 
 
     }
     public void removeSpell(ItemStack stack, Spell spell)
     {
-        CompoundTag tag = stack.getTag();
-        ListTag spells = (ListTag) tag.get("spellsEquipped");
+        NbtCompound tag = stack.getNbt();
+        NbtList spells = (NbtList) tag.get("spellsEquipped");
         for (int i = 0; i < spells.size(); i++) {
             if(spells.getString(i).equals(spell.name()))
             {
                 spells.remove(i);
                 tag.put("spellsEqipped",spells);
-                stack.setTag(tag);
+                stack.setNbt(tag);
                 return;
             }
         }

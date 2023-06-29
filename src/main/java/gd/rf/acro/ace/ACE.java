@@ -8,42 +8,46 @@ import gd.rf.acro.ace.effects.*;
 import gd.rf.acro.ace.entities.BoltEntity;
 import gd.rf.acro.ace.entities.EvilMageEntity;
 import gd.rf.acro.ace.items.*;
-import gd.rf.acro.ace.spells.*;
+import gd.rf.acro.ace.spells.Spell;
+import gd.rf.acro.ace.spells.Spells;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
-import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.*;
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.BiomeTags;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.Biome;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static net.minecraft.server.command.CommandManager.literal;
 
 public class ACE implements ModInitializer {
 
@@ -53,8 +57,9 @@ public class ACE implements ModInitializer {
 			LootTables.HERO_OF_THE_VILLAGE_CLERIC_GIFT_GAMEPLAY,
 			LootTables.DESERT_PYRAMID_CHEST,
 			LootTables.JUNGLE_TEMPLE_CHEST);
-	public static final Tag<Block> INCINERATABLE = TagRegistry.block(new Identifier("ace","incineratable"));
-	public static final Tag<Item> METALWORKABLE = TagRegistry.item(new Identifier("ace","metalworkable"));
+
+	public static final TagKey<Block> INCINERATABLE = TagKey.of(Registry.BLOCK_KEY,new Identifier("ace", "incineratable"));
+	public static final TagKey<Item> METALWORKABLE =  TagKey.of(Registry.ITEM_KEY,new Identifier("ace","metalworkable"));
 	public static Logger LOGGER = LogManager.getLogger();
 	public static final ItemGroup TAB = FabricItemGroupBuilder.build(
 			new Identifier("ace", "tab"),
@@ -64,9 +69,12 @@ public class ACE implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
+
 		registerItems();
 		registerBlocks();
 		registerEffects();
+
+
 		registerEntityThings();
 		ServerPlayNetworking.registerGlobalReceiver(ACE.SCROLL_PACKET,(server,serverPlayerEntity,serverPlayNetworkHandler,packetByteBuf,packetSender)->
 		{
@@ -86,18 +94,17 @@ public class ACE implements ModInitializer {
 
 			}
 		});
-		LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, id, supplier, setter) -> {
-			if (tables.contains(id))
-			{
-				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder()
-						.withEntry(ItemEntry.builder(ACE.DUSTY_TOME_ITEM).weight(10).build())
-						.withEntry(ItemEntry.builder(ACE.BASIC_WAND).weight(5).build())
-						.withEntry(ItemEntry.builder(ACE.CASTING_ORB).weight(1).build())
-						.withEntry(ItemEntry.builder(ACE.GRIMOIRE).weight(1).build())
-						.withEntry(ItemEntry.builder(ACE.DEMONS_KATAR).weight(1).build())
-						.withEntry(ItemEntry.builder(Items.AIR).weight(50).build());
 
-				supplier.withPool(poolBuilder.build());
+		LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+			if (tables.contains(id)) {
+				LootPool.Builder poolBuilder = LootPool.builder()
+						.with(ItemEntry.builder(ACE.DUSTY_TOME_ITEM).weight(10).build())
+						.with(ItemEntry.builder(ACE.BASIC_WAND).weight(5).build())
+						.with(ItemEntry.builder(ACE.CASTING_ORB).weight(1).build())
+						.with(ItemEntry.builder(ACE.GRIMOIRE).weight(1).build())
+						.with(ItemEntry.builder(ACE.DEMONS_KATAR).weight(1).build());
+
+				tableBuilder.pool(poolBuilder);
 			}
 		});
 
@@ -159,16 +166,17 @@ public class ACE implements ModInitializer {
 		Registry.register(Registry.BLOCK,new Identifier("ace","burnt_redstone"),BURNT_REDSTONE_BLOCK);
 	}
 
-	public static final EntangledEffect ENTANGLED_EFFECT = new EntangledEffect(StatusEffectType.HARMFUL, Formatting.GREEN.getColorValue());
-	public static final WindCallEffect WIND_CALL_EFFECT = new WindCallEffect(StatusEffectType.BENEFICIAL,Formatting.AQUA.getColorValue());
-	public static final SecondChanceEffect SECOND_CHANCE_EFFECT = new SecondChanceEffect(StatusEffectType.BENEFICIAL,Formatting.WHITE.getColorValue());
-	public static final FreezeEffect FREEZE_EFFECT = new FreezeEffect(StatusEffectType.HARMFUL,Formatting.BLUE.getColorValue());
-	public static final NoSpellEffect NO_SPELL_EFFECT = new NoSpellEffect(StatusEffectType.HARMFUL,Formatting.RED.getColorValue());
-	public static final UndeadenedEffect UNDEADENED_EFFECT = new UndeadenedEffect(StatusEffectType.HARMFUL,Formatting.RED.getColorValue());
-	public static final AerialEffect AERIAL_EFFECT = new AerialEffect(StatusEffectType.BENEFICIAL,Formatting.WHITE.getColorValue());
-	public static final DoomsdayEffect DOOMSDAY_EFFECT = new DoomsdayEffect(StatusEffectType.HARMFUL,Formatting.BLACK.getColorValue());
+	public static final EntangledEffect ENTANGLED_EFFECT = new EntangledEffect(StatusEffectCategory.HARMFUL, Formatting.GREEN.getColorValue());
+	public static final WindCallEffect WIND_CALL_EFFECT = new WindCallEffect(StatusEffectCategory.BENEFICIAL,Formatting.AQUA.getColorValue());
+	public static final SecondChanceEffect SECOND_CHANCE_EFFECT = new SecondChanceEffect(StatusEffectCategory.BENEFICIAL,Formatting.WHITE.getColorValue());
+	public static final FreezeEffect FREEZE_EFFECT = new FreezeEffect(StatusEffectCategory.HARMFUL,Formatting.BLUE.getColorValue());
+	public static final NoSpellEffect NO_SPELL_EFFECT = new NoSpellEffect(StatusEffectCategory.HARMFUL,Formatting.RED.getColorValue());
+	public static final UndeadenedEffect UNDEADENED_EFFECT = new UndeadenedEffect(StatusEffectCategory.HARMFUL,Formatting.RED.getColorValue());
+	public static final AerialEffect AERIAL_EFFECT = new AerialEffect(StatusEffectCategory.BENEFICIAL,Formatting.WHITE.getColorValue());
+	public static final DoomsdayEffect DOOMSDAY_EFFECT = new DoomsdayEffect(StatusEffectCategory.HARMFUL,Formatting.BLACK.getColorValue());
 	public void registerEffects()
 	{
+
 		Registry.register(Registry.STATUS_EFFECT,new Identifier("ace","entangled"),ENTANGLED_EFFECT);
 		Registry.register(Registry.STATUS_EFFECT,new Identifier("ace","wind_call"),WIND_CALL_EFFECT);
 		Registry.register(Registry.STATUS_EFFECT,new Identifier("ace","second_chance"),SECOND_CHANCE_EFFECT);
@@ -183,17 +191,19 @@ public class ACE implements ModInitializer {
 	public static final EntityType<EvilMageEntity> EVIL_MAGE_ENTITY_TYPE =registerEntity("evil_mage",SpawnGroup.MONSTER,EntityDimensions.changing(0.6f,1.7f),((type, world) -> new EvilMageEntity(world)));
 
 	public static <T extends Entity> EntityType<T> registerEntity(String name, SpawnGroup category, EntityDimensions size, EntityType.EntityFactory<T> factory) {
-		return Registry.register(Registry.ENTITY_TYPE, new Identifier("ace", name), net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder.create(category, factory).size(size).build());
+		return Registry.register(Registry.ENTITY_TYPE, new Identifier("ace", name), FabricEntityTypeBuilder.create(category, factory).dimensions(size).build());
 	}
 
 	//Things like attributes for alive things and spawning (things)
 	public void registerEntityThings()
 	{
 		FabricDefaultAttributeRegistry.register(ACE.EVIL_MAGE_ENTITY_TYPE,EvilMageEntity.attributes());
-		BiomeModifications.addSpawn(BiomeSelectors.categories(Biome.Category.PLAINS), SpawnGroup.MONSTER, ACE.EVIL_MAGE_ENTITY_TYPE, 5, 1, 3);
+		BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.IS_OVERWORLD), SpawnGroup.MONSTER, ACE.EVIL_MAGE_ENTITY_TYPE, 5, 1, 3);
+
 	}
 
 	public static final Identifier SCROLL_PACKET = new Identifier("ace","scroll_packet");
+
 
 
 }

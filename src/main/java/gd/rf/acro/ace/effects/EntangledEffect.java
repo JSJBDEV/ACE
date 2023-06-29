@@ -2,11 +2,13 @@ package gd.rf.acro.ace.effects;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
 
 public class EntangledEffect extends StatusEffect {
-    public EntangledEffect(StatusEffectType type, int color) {
-        super(type, color);
+
+
+    public EntangledEffect(StatusEffectCategory category, int color) {
+        super(category, color);
     }
 
     @Override

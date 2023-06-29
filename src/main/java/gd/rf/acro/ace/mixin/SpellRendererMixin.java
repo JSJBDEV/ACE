@@ -1,24 +1,17 @@
 package gd.rf.acro.ace.mixin;
 
-import gd.rf.acro.ace.ACE;
 import gd.rf.acro.ace.Utils;
 import gd.rf.acro.ace.items.IRenderableCastingDevice;
-import gd.rf.acro.ace.items.SimpleCastingItem;
-import gd.rf.acro.ace.spells.Spell;
-import gd.rf.acro.ace.spells.Spells;
-import net.minecraft.client.font.FontManager;
-import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.text.LiteralText;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.objectweb.asm.Opcodes;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,14 +22,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class SpellRendererMixin {
     @Shadow private int scaledHeight;
 
-    @Shadow public abstract TextRenderer getFontRenderer();
+
 
     private MinecraftClient client;
     @Inject(method="render", at=@At(
             value="FIELD",
-            target="Lnet/minecraft/client/options/GameOptions;debugEnabled:Z",
+            target="Lnet/minecraft/client/option/GameOptions;debugEnabled:Z",
             opcode = Opcodes.GETFIELD, args = {"log=false"}))
-
     private void beforeRenderDebugScreen(MatrixStack stack, float f, CallbackInfo ci) {
         if(client==null)
         {
@@ -63,12 +55,12 @@ public abstract class SpellRendererMixin {
     private Text getManaString(ItemStack stack)
     {
 
-        CompoundTag tag = stack.getTag();
-        if( tag==null || !tag.contains("maxMana")) return new LiteralText("");
+        NbtCompound tag = stack.getNbt();
+        if( tag==null || !tag.contains("maxMana")) return Text.empty();
         int manaPerBar = tag.getInt("maxMana")/10;
-        if(manaPerBar==0) return new LiteralText("");
+        if(manaPerBar==0) return Text.empty();
         int mana = tag.getInt("mana");
-        LiteralText text = new LiteralText("Mana:");
+        MutableText text = (MutableText) Text.of("Mana:");
         for (int i = 0; i < mana/manaPerBar; i++) {
             text.append("█");
         }
