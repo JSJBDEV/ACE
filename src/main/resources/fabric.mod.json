@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Acro's Classical Elements",
-  "description": "A magic mod with 100+ spells",
+  "description": "0ver 100 spells, an electroblobs wizardry type mod",
   "authors": [
     "Acrogenous"
   ],
@@ -30,9 +30,10 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.7.4",
-    "fabric": "*",
-    "minecraft": "1.16.x"
+    "fabricloader": ">=0.14.10",
+    "fabric-api": "*",
+    "minecraft": "~1.19",
+    "java": ">=17"
   },
   "suggests": {
     "another-mod": "*"
