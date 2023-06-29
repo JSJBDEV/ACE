@@ -1,5 +1,6 @@
 package gd.rf.acro.ace.spells;
 
+import gd.rf.acro.ace.ACE;
 import gd.rf.acro.ace.Utils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
@@ -18,21 +19,34 @@ public abstract class Spell {
 
     public void snapCast(LivingEntity caster)
     {
-        Utils.modifyDevotionValue(caster,element(),cost());
+        if(!caster.hasStatusEffect(ACE.NO_SPELL_EFFECT))
+        {
+            Utils.modifyDevotionValue(caster,element(),cost());
+        }
+
     }
     //a spell cast on a block
     public void onTapBlock(LivingEntity caster, BlockPos tapped)
     {
-        Utils.modifyDevotionValue(caster,element(),cost());
+        if(!caster.hasStatusEffect(ACE.NO_SPELL_EFFECT))
+        {
+            Utils.modifyDevotionValue(caster,element(),cost());
+        }
     }
     public void onTapBlockFace(LivingEntity caster, BlockPos tapped, Direction direction)
     {
-        Utils.modifyDevotionValue(caster,element(),cost());
+        if(!caster.hasStatusEffect(ACE.NO_SPELL_EFFECT))
+        {
+            Utils.modifyDevotionValue(caster,element(),cost());
+        }
     }
 
     public void onTouchCast(LivingEntity caster, LivingEntity victim)
     {
-        Utils.modifyDevotionValue(caster,element(),cost());
+        if(!caster.hasStatusEffect(ACE.NO_SPELL_EFFECT))
+        {
+            Utils.modifyDevotionValue(caster,element(),cost());
+        }
     }
 
     public String name()

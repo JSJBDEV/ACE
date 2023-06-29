@@ -5,7 +5,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 public class RaiseSnowGolemSpell extends Spell {
@@ -36,7 +36,7 @@ public class RaiseSnowGolemSpell extends Spell {
         {
             if(caster instanceof PlayerEntity)
             {
-                EntityType.SNOW_GOLEM.spawn((ServerWorld) caster.world,null,new LiteralText(caster.getName()+"'s Golem"), (PlayerEntity) caster,tapped.up(), SpawnReason.EVENT,true,false);
+                EntityType.SNOW_GOLEM.spawn((ServerWorld) caster.world,null, Text.of(caster.getName()+"'s Golem"), (PlayerEntity) caster,tapped.up(), SpawnReason.EVENT,true,false);
             }
             else
             {

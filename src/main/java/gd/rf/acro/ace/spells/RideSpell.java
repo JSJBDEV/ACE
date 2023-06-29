@@ -1,6 +1,8 @@
 package gd.rf.acro.ace.spells;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class RideSpell extends Spell {
     @Override
@@ -26,6 +28,10 @@ public class RideSpell extends Spell {
     @Override
     public void onTouchCast(LivingEntity caster, LivingEntity victim) {
         super.onTouchCast(caster, victim);
-        caster.startRiding(victim,true);
+        if(victim.getType()!= EntityType.PLAYER)
+        {
+            caster.startRiding(victim,true);
+        }
+
     }
 }

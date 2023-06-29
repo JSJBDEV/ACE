@@ -35,7 +35,7 @@ public class ExtractNutrientsSpell extends Spell {
         if(caster instanceof PlayerEntity)
         {
             PlayerEntity playerEntity = (PlayerEntity) caster;
-            if(BlockTags.LEAVES.contains(caster.world.getBlockState(tapped).getBlock()))
+            if(caster.world.getBlockState(tapped).isIn(BlockTags.LEAVES))
             {
                 playerEntity.getHungerManager().add(1,1);
             }

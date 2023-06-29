@@ -31,7 +31,7 @@ public class HydroBeamSpell extends Spell {
         LivingEntity hit =Utils.castBeam(caster,caster.world,new float[]{0,0,1},2);
         if(hit!=null)
         {
-            hit.damage(DamageSource.mob(caster),5);
+           Utils.applyMagicModDamage(caster,hit,5);
         }
 
     }

@@ -31,7 +31,7 @@ public class FlamethrowerSpell extends Spell {
         LivingEntity hit =Utils.castBeam(caster,caster.world,new float[]{1,0,0},2);
         if(hit!=null)
         {
-            hit.damage(DamageSource.mob(caster),6);
+            Utils.applyMagicModDamage(caster,hit,6);
             hit.setOnFireFor(5);
         }
 

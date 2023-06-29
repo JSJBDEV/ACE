@@ -31,6 +31,7 @@ public class ShotgunSpell extends  Spell {
         super.snapCast(caster);
         BoltEntity boltEntity = new BoltEntity(ACE.BOLT_ENTITY_TYPE,caster.world,caster, Items.FIRE_CHARGE,1,"burn");
         boltEntity.setVelocity(caster.getRotationVector());
+
         boltEntity.teleport(caster.getX(),caster.getY()+1,caster.getZ());
         BoltEntity boltEntity1 = new BoltEntity(ACE.BOLT_ENTITY_TYPE,caster.world,caster, Items.FIRE_CHARGE,1,"burn");
         boltEntity1.setVelocity(caster.getRotationVector().rotateY(-0.2f));

@@ -2,11 +2,10 @@ package gd.rf.acro.ace.spells;
 
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.CompassItem;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.tag.StructureTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.gen.feature.StructureFeature;
 
 public class PilgrimageSpell extends Spell {
     @Override
@@ -35,7 +34,8 @@ public class PilgrimageSpell extends Spell {
         if(!caster.world.isClient)
         {
             ServerWorld world = (ServerWorld) caster.getEntityWorld();
-            BlockPos pos = world.locateStructure(StructureFeature.DESERT_PYRAMID,tapped,1000,false);
+            BlockPos pos = world.locateStructure(StructureTags.RUINED_PORTAL,tapped,1000,false);
+
             if(pos!=null)
             {
                 caster.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, Vec3d.ofCenter(pos));

@@ -33,7 +33,7 @@ public class MagicSenseSpell extends  Spell{
     @Override
     public void snapCast(LivingEntity caster) {
         super.snapCast(caster);
-        List<LivingEntity> entities = caster.world.getEntitiesByClass(LivingEntity.class,new Box(caster.getPos().add(-15,-15,-15),caster.getPos().add(15,15,15)),null);
+        List<LivingEntity> entities = caster.world.getEntitiesByClass(LivingEntity.class,new Box(caster.getPos().add(-15,-15,-15),caster.getPos().add(15,15,15)),LivingEntity::isAlive);
         entities.forEach(entity -> entity.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING,200)));
     }
 }

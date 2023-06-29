@@ -39,7 +39,7 @@ public class EarthLaunchSpell extends Spell {
             {
                 caster.world.setBlockState(tapped.up(), ACE.FLEETING_DIRT.getDefaultState());
                 caster.world.setBlockState(tapped.up(2), ACE.FLEETING_DIRT.getDefaultState());
-                List<Entity> entities = caster.world.getEntitiesByClass(Entity.class,new Box(tapped.add(-2,-2,-2),tapped.add(2,2,2)),null);
+                List<Entity> entities = caster.world.getEntitiesByClass(Entity.class,new Box(tapped.add(-2,-2,-2),tapped.add(2,2,2)),Entity::isAlive);
                 entities.forEach(entity -> entity.addVelocity(0,2,0));
             }
         }
