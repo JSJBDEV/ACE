@@ -44,7 +44,8 @@ public class ChainLightningSpell extends Spell {
     }
     public static void chain(LivingEntity current,LivingEntity caster)
     {
-        current.damage(DamageSource.mob(caster),5);
+
+        Utils.applyMagicModDamage(caster,current,5);
         BlockPos tapped = current.getBlockPos();
         List<LivingEntity> entities = current.world.getEntitiesByClass(LivingEntity.class,new Box(tapped.add(-5,-5,-5),tapped.add(5,5,5)),e-> e!=current&&!e.isTeammate(caster));
         if(entities.size()>0 && RandomUtils.nextBoolean())
