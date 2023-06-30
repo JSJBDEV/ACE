@@ -5,24 +5,24 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 
-public class SabotageRedstoneSpell extends Spell {
+public class SabotageRedstoneSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "tap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "fire";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 2;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 10;
     }
 

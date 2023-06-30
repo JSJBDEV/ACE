@@ -2,26 +2,25 @@ package gd.rf.acro.ace.spells;
 
 import gd.rf.acro.ace.Utils;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 
-public class HydroBeamSpell extends Spell {
+public class HydroBeamSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "water";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

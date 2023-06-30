@@ -4,26 +4,25 @@ import gd.rf.acro.ace.Utils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 
-public class OffYouGoSpell extends Spell {
+public class OffYouGoSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "touch";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "fire";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

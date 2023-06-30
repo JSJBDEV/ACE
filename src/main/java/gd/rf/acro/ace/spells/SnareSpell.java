@@ -2,27 +2,26 @@ package gd.rf.acro.ace.spells;
 
 import gd.rf.acro.ace.ACE;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 
-public class SnareSpell extends Spell {
+public class SnareSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "touch";
     }
 
     @Override
-    public String element() {
-        return "earth";
+    public Element getElement() {
+        return EARTH
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

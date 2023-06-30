@@ -3,24 +3,24 @@ package gd.rf.acro.ace.spells;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
-public class SolarPoweredSpell extends Spell {
+public class SolarPoweredSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "fire";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

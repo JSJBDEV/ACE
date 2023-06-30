@@ -6,24 +6,24 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 
-public class CreateIceSpikeSpell extends Spell {
+public class CreateIceSpikeSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "tap";
     }
 
     @Override
-    public String element() {
-        return "water";
+    public Element getElement() {
+        return Element.WATER;
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 10;
     }
 

@@ -2,27 +2,26 @@ package gd.rf.acro.ace.spells;
 
 import gd.rf.acro.ace.Utils;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 
-public class EscapeSpell extends Spell {
+public class EscapeSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "air";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 10;
     }
 

@@ -7,24 +7,24 @@ import net.minecraft.util.math.Box;
 
 import java.util.List;
 
-public class DisableMagicSpell extends Spell {
+public class DisableMagicSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
-        return "fire";
+    public Element getElement() {
+        return Element.FIRE;
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 10;
     }
 

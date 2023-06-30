@@ -30,6 +30,6 @@ public class FleetingBlock extends Block {
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         super.onBlockAdded(state, world, pos, oldState, notify);
-        world.createAndScheduleBlockTick(pos,this,fleet);
+        world.scheduleBlockTick(pos,this,fleet);
     }
 }

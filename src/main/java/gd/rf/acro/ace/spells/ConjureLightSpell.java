@@ -5,24 +5,24 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-public class ConjureLightSpell extends Spell {
+public class ConjureLightSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "tap";
     }
 
     @Override
-    public String element() {
-        return "fire";
+    public Element getElement() {
+        return Element.FIRE;
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 2;
     }
 

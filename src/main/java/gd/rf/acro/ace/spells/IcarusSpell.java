@@ -7,24 +7,24 @@ import net.minecraft.util.math.Box;
 
 import java.util.List;
 
-public class IcarusSpell extends Spell {
+public class IcarusSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "fire";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 10;
     }
 

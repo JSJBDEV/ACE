@@ -3,32 +3,19 @@ package gd.rf.acro.ace.entities;
 import gd.rf.acro.ace.ACE;
 import gd.rf.acro.ace.Utils;
 import gd.rf.acro.ace.spells.ChainLightningSpell;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 public class BoltEntity extends SnowballEntity {
@@ -93,7 +80,7 @@ public class BoltEntity extends SnowballEntity {
         return Items.ACACIA_BOAT;
     }
 
-    public Packet<?> createSpawnPacket() {
+    public Packet<ClientPlayPacketListener> createSpawnPacket() {
         Entity entity = in;
         return new EntitySpawnS2CPacket(this, entity == null ? 0 : entity.getId());
     }

@@ -1,5 +1,6 @@
 package gd.rf.acro.ace.blocks;
 
+import gd.rf.acro.ace.spells.SpellACE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -16,8 +17,8 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class TrapBlock extends Block {
-    String element;
-    public TrapBlock(Settings settings,String elem) {
+    SpellACE.Element element;
+    public TrapBlock(Settings settings, SpellACE.Element elem) {
         super(settings);
         element=elem;
     }
@@ -32,28 +33,26 @@ public class TrapBlock extends Block {
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         super.onEntityCollision(state, world, pos, entity);
-        switch (element)
-        {
-            case "fire":
+        switch (element) {
+            case FIRE -> {
                 entity.setOnFireFor(5);
-                entity.playSound(SoundEvents.ITEM_FIRECHARGE_USE,1,1);
-                break;
-            case "water":
-                if(entity instanceof LivingEntity)
-                {
-                    entity.setVelocity(0,0,0);
-                    ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS,100,3));
-                    entity.playSound(SoundEvents.ENTITY_SPLASH_POTION_BREAK,1,1);
+                entity.playSound(SoundEvents.ITEM_FIRECHARGE_USE, 1, 1);
+            }
+            case WATER -> {
+                if (entity instanceof LivingEntity) {
+                    entity.setVelocity(0, 0, 0);
+                    ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 3));
+                    entity.playSound(SoundEvents.ENTITY_SPLASH_POTION_BREAK, 1, 1);
                 }
-                break;
-            case "air":
-                entity.addVelocity(0,2,0);
-                entity.playSound(SoundEvents.ITEM_ARMOR_EQUIP_ELYTRA,1,1);
-                break;
-            case "earth":
-                ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.POISON,100,3));
-                entity.playSound(SoundEvents.BLOCK_BASALT_BREAK,1,1);
-                break;
+            }
+            case AIR -> {
+                entity.addVelocity(0, 2, 0);
+                entity.playSound(SoundEvents.ITEM_ARMOR_EQUIP_ELYTRA, 1, 1);
+            }
+            case EARTH -> {
+                ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 100, 3));
+                entity.playSound(SoundEvents.BLOCK_BASALT_BREAK, 1, 1);
+            }
         }
 
         world.setBlockState(pos, Blocks.AIR.getDefaultState());

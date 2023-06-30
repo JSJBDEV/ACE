@@ -5,24 +5,24 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 
-public class FrostSeedSpell extends Spell {
+public class FrostSeedSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "tap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "water";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

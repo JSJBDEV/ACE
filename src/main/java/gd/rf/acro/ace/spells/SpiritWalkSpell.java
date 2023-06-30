@@ -3,24 +3,24 @@ package gd.rf.acro.ace.spells;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 
-public class SpiritWalkSpell extends Spell {
+public class SpiritWalkSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "tap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "air";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

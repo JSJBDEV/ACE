@@ -1,30 +1,20 @@
 package gd.rf.acro.ace.spells;
 
+import dev.louis.nebula.spell.SpellType;
 import gd.rf.acro.ace.ACE;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
 
-public class AngelicRebirthSpell extends Spell {
-    @Override
-    public String spellType() {
-        return "touch";
+public class AngelicRebirthSpell extends TouchEntitySpell {
+    public AngelicRebirthSpell(SpellType<?> spellType, PlayerEntity caster) {
+        super(spellType, caster);
     }
 
     @Override
-    public String element() {
-        return "fire";
-    }
+    public void cast() {
 
-    @Override
-    public int tier() {
-        return 2;
-    }
-
-    @Override
-    public int cost() {
-        return 50;
     }
 
     @Override

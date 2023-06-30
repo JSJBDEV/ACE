@@ -5,24 +5,24 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 
-public class BlinkSpell extends Spell {
+public class BlinkSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
-        return "fire";
+    public Element getElement() {
+        return Element.FIRE;
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 5;
     }
 

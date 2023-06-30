@@ -2,24 +2,24 @@ package gd.rf.acro.ace.spells;
 
 import net.minecraft.entity.LivingEntity;
 
-public class DisarmSpell extends Spell {
+public class DisarmSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "touch";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "air";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 10;
     }
 

@@ -19,20 +19,16 @@ public class SeepingIceBlock extends Block {
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, net.minecraft.util.math.random.Random random) {
         super.randomTick(state, world, pos, random);
-        if(world.getBlockState(pos.west()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean())
-        {
+        if(world.getBlockState(pos.west()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean()) {
             world.setBlockState(pos.west(), ACE.SEEPING_ICE_BLOCK.getDefaultState());
         }
-        if(world.getBlockState(pos.east()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean())
-        {
+        if(world.getBlockState(pos.east()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean()) {
             world.setBlockState(pos.east(),ACE.SEEPING_ICE_BLOCK.getDefaultState());
         }
-        if(world.getBlockState(pos.south()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean())
-        {
+        if(world.getBlockState(pos.south()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean()) {
             world.setBlockState(pos.south(),ACE.SEEPING_ICE_BLOCK.getDefaultState());
         }
-        if(world.getBlockState(pos.north()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean())
-        {
+        if(world.getBlockState(pos.north()).getBlock()== Blocks.WATER && RandomUtils.nextBoolean()) {
             world.setBlockState(pos.north(),ACE.SEEPING_ICE_BLOCK.getDefaultState());
         }
         world.setBlockState(pos,Blocks.PACKED_ICE.getDefaultState());

@@ -3,27 +3,25 @@ package gd.rf.acro.ace.spells;
 import gd.rf.acro.ace.Utils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 
-public class RocketSpell extends Spell {
+public class RocketSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "fire";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 2;
     }
 

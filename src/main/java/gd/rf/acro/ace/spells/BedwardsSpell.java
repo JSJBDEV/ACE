@@ -6,28 +6,27 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.dimension.DimensionType;
 
 import java.util.Optional;
 
-public class BedwardsSpell extends Spell {
+public class BedwardsSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
-        return "air";
+    public Element getElement() {
+        return Element.AIR;
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 10;
     }
 

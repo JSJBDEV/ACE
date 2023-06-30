@@ -5,24 +5,24 @@ import gd.rf.acro.ace.entities.BoltEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Items;
 
-public class EmberSpell extends  Spell {
+public class EmberSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
+    public Element getElement() {
         return "fire";
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 1;
     }
 

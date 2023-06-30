@@ -2,28 +2,27 @@ package gd.rf.acro.ace.spells;
 
 import gd.rf.acro.ace.ACE;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-public class ConjureBlockSpell extends Spell {
+public class ConjureBlockSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "tap";
     }
 
     @Override
-    public String element() {
-        return "earth";
+    public Element getElement() {
+        return Element.EARTH;
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 0;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 3;
     }
 

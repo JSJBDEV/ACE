@@ -1,8 +1,8 @@
 package gd.rf.acro.ace.items;
 
 import gd.rf.acro.ace.ACE;
-import gd.rf.acro.ace.Utils;
 import gd.rf.acro.ace.spells.*;
+import gd.rf.acro.ace.spells.SpellACE.CastingType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -37,7 +37,7 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
         if(user.getOffHandStack().getItem() instanceof DustyTomeItem)
         {
             NbtCompound tag = user.getMainHandStack().getNbt();
-            Spell onBook = Spells.getSpellByName(user.getOffHandStack().getNbt().getString("spell"));
+            SpellACE onBook = SpellsOld.getSpellByName(user.getOffHandStack().getNbt().getString("spell"));
             NbtList spells = (NbtList) tag.get("spellsEquipped");
             if(spells.size()<tag.getInt("maxSpells"))
             {
@@ -54,14 +54,12 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
         }
 
         //This bit is actual casting, specifically snapcasting
-        Spell spell = getEquipped(user.getStackInHand(hand));
-        if(spell!=null && hand==Hand.MAIN_HAND && spell.spellType().contains("snap"))
-        {
+        SpellACE spell = getEquipped(user.getStackInHand(hand));
+        if(spell!=null && hand==Hand.MAIN_HAND && spell.getCastingType() == CastingType.NORMAL) {
             NbtCompound tag = user.getStackInHand(hand).getNbt();
-            if(tag.getInt("mana")>spell.cost())
-            {
-                spell.snapCast(user);
-                tag.putInt("mana",tag.getInt("mana")-spell.cost());
+            if(tag.getInt("mana")>spell.getManaCost()) {
+                spell.cast();
+                tag.putInt("mana",tag.getInt("mana")-spell.getManaCost());
                 user.getStackInHand(hand).setNbt(tag);
             }
 
@@ -71,14 +69,14 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        Spell spell = getEquipped(stack);
-        if(spell!=null && hand==Hand.MAIN_HAND && spell.spellType().contains("touch"))
+        SpellACE spell = getEquipped(stack);
+        if(spell!=null && hand==Hand.MAIN_HAND && spell.getCastingType().contains("touch"))
         {
             NbtCompound tag = stack.getNbt();
-            if(tag.getInt("mana")>spell.cost())
+            if(tag.getInt("mana")>spell.getManaCost())
             {
                 spell.onTouchCast(user,entity);
-                tag.putInt("mana",tag.getInt("mana")-spell.cost());
+                tag.putInt("mana",tag.getInt("mana")-spell.getManaCost());
                 stack.setNbt(tag);
             }
         }
@@ -87,15 +85,13 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        Spell spell = getEquipped(context.getStack());
-        if(spell!=null && context.getHand()==Hand.MAIN_HAND && spell.spellType().contains("tap"))
-        {
+        SpellACE spell = getEquipped(context.getStack());
+        if(spell!=null && context.getHand()==Hand.MAIN_HAND && spell.getCastingType() == CastingType.TAP) {
             NbtCompound tag = context.getStack().getNbt();
-            if(tag.getInt("mana")>spell.cost())
-            {
+            if(tag.getInt("mana")>spell.getManaCost()) {
                 spell.onTapBlock(context.getPlayer(),context.getBlockPos());
                 spell.onTapBlockFace(context.getPlayer(),context.getBlockPos(),context.getSide());
-                tag.putInt("mana",tag.getInt("mana")-spell.cost());
+                tag.putInt("mana",tag.getInt("mana")-spell.getManaCost());
                 context.getStack().setNbt(tag);
             }
 
@@ -104,13 +100,12 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
     }
 
 
-    public Spell getEquipped(ItemStack stack) {
-        if(stack.hasNbt() && stack.getNbt().contains("spellsEquipped"))
-        {
+    public SpellACE getEquipped(ItemStack stack) {
+        if(stack.hasNbt() && stack.getNbt().contains("spellsEquipped")) {
             NbtCompound tag = stack.getNbt();
 
             NbtList spells = (NbtList) tag.get("spellsEquipped");
-            return Spells.getSpellByName(spells.getString(tag.getInt("selected")));
+            return SpellsOld.getSpellByName(spells.getString(tag.getInt("selected")));
         }
         return null;
 
@@ -120,8 +115,7 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
         NbtCompound tag = new NbtCompound();
-        if(!stack.hasNbt())
-        {
+        if(!stack.hasNbt()) {
 
             tag.putInt("selected",0);
             NbtList list = new NbtList();
@@ -133,21 +127,19 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
             stack.setNbt(tag);
             if(stack.getItem()== ACE.MASTER_SPELL_BOOK)
             {
-                addSpell(stack, Spells.REGISTRY.toArray(new Spell[]{}));
+                addSpell(stack, SpellsOld.REGISTRY.toArray(new SpellACE[]{}));
             }
         }
         tag=stack.getNbt();
         //mana regen (per second)
-        if(world.getTimeOfDay()%20L==0L)
-        {
+        if(world.getTimeOfDay()%20L==0L) {
             tag.putInt("mana", Math.min(tag.getInt("mana") + tag.getInt("manaRegen"), tag.getInt("maxMana")));
             stack.setNbt(tag);
         }
 
     }
 
-    public void scrollMinus(ItemStack stack)
-    {
+    public void scrollMinus(ItemStack stack) {
         NbtCompound tag = stack.getNbt();
         NbtList spells = (NbtList) tag.get("spellsEquipped");
 
@@ -161,8 +153,7 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
         }
         stack.setNbt(tag);
     }
-    public void scrollPlus(ItemStack stack)
-    {
+    public void scrollPlus(ItemStack stack) {
         NbtCompound tag = stack.getNbt();
         NbtList spells = (NbtList) tag.get("spellsEquipped");
         if(tag.getInt("selected")< spells.size()-1)
@@ -176,18 +167,13 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
         stack.setNbt(tag);
 
     }
-    public void addSpell(ItemStack stack,Spell... spell)
-    {
-
+    public void addSpell(ItemStack stack, SpellACE... spell) {
         NbtCompound tag = stack.getNbt();
         NbtList spells = (NbtList) tag.get("spellsEquipped");
 
-        if(spell.length>0)
-        {
-            for (int i = 0; i < spell.length; i++)
-            {
-                if(spells.size()<tag.getInt("maxSpells"))
-                {
+        if(spell.length>0) {
+            for (int i = 0; i < spell.length; i++) {
+                if(spells.size()<tag.getInt("maxSpells")) {
                     spells.add(NbtString.of(spell[i].name()));
                 }
             }
@@ -199,8 +185,7 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
 
 
     }
-    public void removeSpell(ItemStack stack, Spell spell)
-    {
+    public void removeSpell(ItemStack stack, SpellACE spell) {
         NbtCompound tag = stack.getNbt();
         NbtList spells = (NbtList) tag.get("spellsEquipped");
         for (int i = 0; i < spells.size(); i++) {

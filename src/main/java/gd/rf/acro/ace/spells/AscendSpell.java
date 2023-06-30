@@ -3,24 +3,24 @@ package gd.rf.acro.ace.spells;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.Heightmap;
 
-public class AscendSpell extends Spell {
+public class AscendSpell extends SpellACE {
     @Override
-    public String spellType() {
+    public String getCastingType() {
         return "snap";
     }
 
     @Override
-    public String element() {
-        return "air";
+    public Element getElement() {
+        return Element.AIR;
     }
 
     @Override
-    public int tier() {
+    public int getTier() {
         return 1;
     }
 
     @Override
-    public int cost() {
+    public int getManaCost() {
         return 10;
     }
 

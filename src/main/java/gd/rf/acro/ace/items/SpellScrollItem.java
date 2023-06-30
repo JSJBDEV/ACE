@@ -1,8 +1,6 @@
 package gd.rf.acro.ace.items;
 
-import gd.rf.acro.ace.spells.ConjureFireSpell;
-import gd.rf.acro.ace.spells.FireTrapSpell;
-import gd.rf.acro.ace.spells.Spell;
+import gd.rf.acro.ace.spells.SpellACE;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -14,29 +12,28 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class SpellScrollItem extends Item {
-    Spell store;
-    public SpellScrollItem(Settings settings,Spell spell) {
+    SpellACE spell;
+    public SpellScrollItem(Settings settings, SpellACE spell) {
         super(settings);
-        store=spell;
+        this.spell =spell;
     }
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-
-        store.onTapBlock(context.getPlayer(),context.getBlockPos());
+        spell.onTapBlock(context.getPlayer(),context.getBlockPos());
 
         return super.useOnBlock(context);
     }
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        store.onTouchCast(user,entity);
+        spell.onTouchCast(user,entity);
         return super.useOnEntity(stack, user, entity, hand);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        store.snapCast(user);
+        spell.snapCast(user);
         return super.use(world, user, hand);
     }
 }

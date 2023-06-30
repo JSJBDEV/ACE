@@ -19,8 +19,8 @@ public class FreezeEffect extends StatusEffect {
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         super.applyUpdateEffect(entity, amplifier);
         entity.setVelocity(0,0,0);
-        entity.world.setBlockState(entity.getBlockPos(), ACE.FLEETING_ICE.getDefaultState());
-        entity.world.setBlockState(entity.getBlockPos().up(), ACE.FLEETING_ICE.getDefaultState());
+        entity.getWorld().setBlockState(entity.getBlockPos(), ACE.FLEETING_ICE.getDefaultState());
+        entity.getWorld().setBlockState(entity.getBlockPos().up(), ACE.FLEETING_ICE.getDefaultState());
     }
 
     @Override
