@@ -86,11 +86,9 @@ public class SimpleCastingItem extends Item implements IRenderableCastingDevice{
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         SpellACE spell = getEquipped(context.getStack());
-        if(spell!=null && context.getHand()==Hand.MAIN_HAND && spell.getCastingType() == CastingType.TAP))
-        {
+        if(spell!=null && context.getHand()==Hand.MAIN_HAND && spell.getCastingType() == CastingType.TAP) {
             NbtCompound tag = context.getStack().getNbt();
-            if(tag.getInt("mana")>spell.getManaCost())
-            {
+            if(tag.getInt("mana")>spell.getManaCost()) {
                 spell.onTapBlock(context.getPlayer(),context.getBlockPos());
                 spell.onTapBlockFace(context.getPlayer(),context.getBlockPos(),context.getSide());
                 tag.putInt("mana",tag.getInt("mana")-spell.getManaCost());

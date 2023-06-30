@@ -228,16 +228,13 @@ public class Utils {
         MutableText text = (MutableText) Text.of(variationSelector);
         Style style = Style.EMPTY;
         style = style.withColor(TextColor.fromRgb(spellNumber));
-        if(spellNumber%5==0)
-        {
+        if(spellNumber%5==0) {
             style = style.withBold(true);
         }
-        if(spellNumber%7==0)
-        {
+        if(spellNumber%7==0) {
             style = style.withUnderline(true);
         }
-        if(spellNumber%11==0)
-        {
+        if(spellNumber%11==0) {
             style = style.withItalic(true);
         }
         text.setStyle(style);
