@@ -9,6 +9,7 @@ import gd.rf.acro.ace.entities.BoltEntity;
 import gd.rf.acro.ace.entities.EvilMageEntity;
 import gd.rf.acro.ace.items.*;
 import gd.rf.acro.ace.spells.SpellACE;
+import gd.rf.acro.ace.spells.Spells;
 import gd.rf.acro.ace.spells.SpellsOld;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -67,8 +68,8 @@ public class ACE implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
+		Spells.init();
 		Registry.register(Registries.ITEM_GROUP, new Identifier("ace", "aceitems"), TAB);
-
 		registerItems();
 		registerBlocks();
 		registerEffects();

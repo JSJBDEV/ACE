@@ -8,12 +8,12 @@ import net.minecraft.util.Identifier;
 
 public class Spells {
     public static void init(){}
-    public static SpellType<?> AIR_TRAP = register(AirTrapSpell::new, 10, Element.AIR, SpellACE.CastingType.TAP, 0, id("air_trap"));
-    public static SpellType<?> ALCHEMY = register(AlchemySpell::new, 0, Element.EARTH, SpellACE.CastingType.TAP, 0, id("alchemy"));
-    public static SpellType<?> AngelicRebirth = register(AngelicRebirthSpell::new, 50, Element.FIRE, SpellACE.CastingType.TOUCH, 2, id("angelic_rebirth"));
+    public static SpellType<?> AIR_TRAP = register(AirTrapSpell::new, Element.AIR, SpellACE.CastingType.TAP,10, 0, id("air_trap"));
+    public static SpellType<?> ALCHEMY = register(AlchemySpell::new, Element.EARTH, SpellACE.CastingType.TAP,0, 0, id("alchemy"));
+    public static SpellType<?> AngelicRebirth = register(AngelicRebirthSpell::new, Element.FIRE, SpellACE.CastingType.TOUCH,50, 2, id("angelic_rebirth"));
 
 
-    private static SpellTypeACE<?> register(SpellType.SpellFactory<SpellACE> spellFactory, int manaCost, Element element, SpellACE.CastingType castingType, int tier, Identifier id) {
+    private static SpellTypeACE<?> register(SpellType.SpellFactory<SpellACE> spellFactory, Element element, SpellACE.CastingType castingType,int manaCost, int tier, Identifier id) {
         SpellTypeACE<? extends SpellACE> spellTypeACE = new SpellTypeACE<>(spellFactory, manaCost, element, castingType, tier);
         Registry.register(Nebula.NebulaRegistries.SPELL_TYPE, id, spellTypeACE);
         return spellTypeACE;
