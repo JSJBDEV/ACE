@@ -31,8 +31,8 @@ public class HealosphereSpell extends SpellACE {
     @Override
     public void onTapBlockFace(LivingEntity caster, BlockPos tapped, Direction direction) {
         super.onTapBlockFace(caster, tapped, direction);
-        Utils.createAOE(caster.world,tapped.add(direction.getVector()),
-                Utils.getColourForElement("water"),
+        Utils.createAOE(caster.getWorld(),tapped.add(direction.getVector()),
+                Utils.getColourForElement(Element.WATER),
                 new StatusEffectInstance(StatusEffects.REGENERATION,100));
     }
 }

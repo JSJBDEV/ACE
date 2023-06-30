@@ -29,7 +29,7 @@ public class GrappleSpell extends SpellACE {
     @Override
     public void snapCast(LivingEntity caster) {
         super.snapCast(caster);
-        LivingEntity victim = Utils.castBeam(caster,caster.world,Utils.getColourForElement("earth"));
+        LivingEntity victim = Utils.castBeam(caster,caster.getWorld(),Utils.getColourForElement(Element.EARTH));
         if(victim!=null)
         {
             victim.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES,caster.getPos());

@@ -31,8 +31,8 @@ public class UpdraftSpell extends SpellACE {
     @Override
     public void onTapBlockFace(LivingEntity caster, BlockPos tapped, Direction direction) {
         super.onTapBlockFace(caster, tapped, direction);
-        Utils.createAOE(caster.world,tapped.add(direction.getVector()),
-                Utils.getColourForElement("air"),
+        Utils.createAOE(caster.getWorld(),tapped.add(direction.getVector()),
+                Utils.getColourForElement(Element.AIR),
                 new StatusEffectInstance(StatusEffects.LEVITATION,50,5));
     }
 }

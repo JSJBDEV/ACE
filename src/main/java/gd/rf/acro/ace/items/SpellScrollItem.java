@@ -12,29 +12,28 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class SpellScrollItem extends Item {
-    SpellACE store;
+    SpellACE spell;
     public SpellScrollItem(Settings settings, SpellACE spell) {
         super(settings);
-        store=spell;
+        this.spell =spell;
     }
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-
-        store.onTapBlock(context.getPlayer(),context.getBlockPos());
+        spell.onTapBlock(context.getPlayer(),context.getBlockPos());
 
         return super.useOnBlock(context);
     }
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        store.onTouchCast(user,entity);
+        spell.onTouchCast(user,entity);
         return super.useOnEntity(stack, user, entity, hand);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        store.snapCast(user);
+        spell.snapCast(user);
         return super.use(world, user, hand);
     }
 }

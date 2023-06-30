@@ -21,9 +21,9 @@
     "main": [
       "gd.rf.acro.ace.ACE"
     ],
-    "client": [{
-      "value": "gd.rf.acro.ace.AceClient"
-    }]
+    "client": [
+      "gd.rf.acro.ace.AceClient"
+    ]
   },
   "mixins": [
     "ace.mixins.json"
@@ -34,8 +34,5 @@
     "fabric-api": "*",
     "minecraft": "~1.19",
     "java": ">=17"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }

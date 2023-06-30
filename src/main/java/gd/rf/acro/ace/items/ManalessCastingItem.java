@@ -36,17 +36,14 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         //This bit is to add spells to your casting device
-        if(user.getOffHandStack().getItem() instanceof DustyTomeItem && user.getMainHandStack().getItem()!=ACE.GRIMOIRE)
-        {
+        if(user.getOffHandStack().getItem() instanceof DustyTomeItem && user.getMainHandStack().getItem()!=ACE.GRIMOIRE) {
             NbtCompound tag = user.getMainHandStack().getNbt();
             SpellACE onBook = SpellsOld.getSpellByName(user.getOffHandStack().getNbt().getString("spell"));
             NbtList spells = (NbtList) tag.get("spellsEquipped");
-            if(spells.size()<tag.getInt("maxSpells"))
-            {
+            if(spells.size()<tag.getInt("maxSpells")) {
                 addSpell(user.getMainHandStack(),onBook);
             }
-            else
-            {
+            else {
                 removeSpell(user.getMainHandStack(),getEquipped(user.getMainHandStack()));
                 addSpell(user.getMainHandStack(),onBook);
             }
@@ -57,12 +54,10 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
 
         //This bit is actual casting, specifically snapcasting
         SpellACE spell = getEquipped(user.getStackInHand(hand));
-        if(spell!=null && hand==Hand.MAIN_HAND && spell.getCastingType().contains("snap"))
-        {
+        if(spell!=null && hand==Hand.MAIN_HAND && spell.getCastingType() == SpellACE.CastingType.NORMAL) {
             spell.snapCast(user);
-            if(user.getStackInHand(hand).getItem()==ACE.DEMONS_KATAR)
-            {
-                user.damage(DamageSource.MAGIC,spell.getManaCost());
+            if(user.getStackInHand(hand).getItem()==ACE.DEMONS_KATAR) {
+                user.damage(world.getDamageSources().magic(),spell.getManaCost());
             }
 
         }
@@ -72,12 +67,10 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         SpellACE spell = getEquipped(stack);
-        if(spell!=null && hand==Hand.MAIN_HAND && spell.getCastingType().contains("touch"))
-        {
+        if(spell!=null && hand==Hand.MAIN_HAND && spell.getCastingType() == SpellACE.CastingType.TOUCH) {
             spell.onTouchCast(user,entity);
-            if(user.getStackInHand(hand).getItem()==ACE.DEMONS_KATAR)
-            {
-                user.damage(DamageSource.MAGIC,spell.getManaCost());
+            if(user.getStackInHand(hand).getItem()==ACE.DEMONS_KATAR) {
+                user.damage(entity.getWorld().getDamageSources().magic(),spell.getManaCost());
             }
 
         }
@@ -87,13 +80,13 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         SpellACE spell = getEquipped(context.getStack());
-        if(spell!=null && context.getHand()==Hand.MAIN_HAND && spell.getCastingType().contains("tap"))
+        if(spell!=null && context.getHand()==Hand.MAIN_HAND && spell.getCastingType() == SpellACE.CastingType.TAP)
         {
             spell.onTapBlock(context.getPlayer(),context.getBlockPos());
             spell.onTapBlockFace(context.getPlayer(),context.getBlockPos(),context.getSide());
             if(context.getPlayer().getStackInHand(context.getHand()).getItem()==ACE.DEMONS_KATAR)
             {
-                context.getPlayer().damage(DamageSource.MAGIC,spell.getManaCost());
+                context.getPlayer().damage(context.getWorld().getDamageSources().magic(), spell.getManaCost());
             }
 
         }
@@ -117,15 +110,14 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
         NbtCompound tag = new NbtCompound();
-        if(!stack.hasNbt())
-        {
+        if(!stack.hasNbt()) {
 
             tag.putInt("selected",0);
             NbtList list = new NbtList();
             tag.put("spellsEquipped",list);
             tag.putInt("maxSpells",maxSpells);
             stack.setNbt(tag);
-            if(stack.getItem()== ACE.GRIMOIRE) {
+            if(stack.getItem() == ACE.GRIMOIRE) {
                 addSpell(stack, SpellsOld.REGISTRY.get(RandomUtils.nextInt(0, SpellsOld.REGISTRY.size())));
                 addSpell(stack, SpellsOld.REGISTRY.get(RandomUtils.nextInt(0, SpellsOld.REGISTRY.size())));
                 addSpell(stack, SpellsOld.REGISTRY.get(RandomUtils.nextInt(0, SpellsOld.REGISTRY.size())));
@@ -148,12 +140,10 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
         NbtCompound tag = stack.getNbt();
         NbtList spells = (NbtList) tag.get("spellsEquipped");
 
-        if(tag.getInt("selected")>0)
-        {
+        if(tag.getInt("selected")>0) {
             tag.putInt("selected",tag.getInt("selected")-1);
         }
-        else
-        {
+        else {
             tag.putInt("selected", spells.size()-1);
         }
         stack.setNbt(tag);
@@ -161,12 +151,10 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
     public void scrollPlus(ItemStack stack) {
         NbtCompound tag = stack.getNbt();
         NbtList spells = (NbtList) tag.get("spellsEquipped");
-        if(tag.getInt("selected")< spells.size()-1)
-        {
+        if(tag.getInt("selected")< spells.size()-1) {
             tag.putInt("selected",tag.getInt("selected")+1);
         }
-        else
-        {
+        else {
             tag.putInt("selected",0);
         }
         stack.setNbt(tag);
@@ -189,13 +177,11 @@ public class ManalessCastingItem extends Item implements IRenderableCastingDevic
         tag.put("spellsEquipped",spells);
         stack.setNbt(tag);
     }
-    public void removeSpell(ItemStack stack, SpellACE spell)
-    {
+    public void removeSpell(ItemStack stack, SpellACE spell) {
         NbtCompound tag = stack.getNbt();
         NbtList spells = (NbtList) tag.get("spellsEquipped");
         for (int i = 0; i < spells.size(); i++) {
-            if(spells.getString(i).equals(spell.name()))
-            {
+            if(spells.getString(i).equals(spell.name())) {
                 spells.remove(i);
                 tag.put("spellsEqipped",spells);
                 stack.setNbt(tag);

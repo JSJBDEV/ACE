@@ -19,11 +19,8 @@ public class DoomsdayEffect extends StatusEffect {
     @Override
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onRemoved(entity, attributes, amplifier);
-        if(entity instanceof PlayerEntity)
-        {
-            PlayerEntity player  = (PlayerEntity) entity;
-            if(player.getInventory().count(Items.DIAMOND)>0)
-            {
+        if(entity instanceof PlayerEntity player) {
+            if(player.getInventory().count(Items.DIAMOND)>0) {
                 for (ItemStack item : player.getInventory().main) {
                     if (item.getItem() == Items.DIAMOND) {
                         item.decrement(1);
@@ -33,6 +30,6 @@ public class DoomsdayEffect extends StatusEffect {
                 return;
             }
         }
-        entity.damage(DamageSource.OUT_OF_WORLD,9999);
+        entity.damage(entity.getWorld().getDamageSources().outOfWorld(),9999);
     }
 }

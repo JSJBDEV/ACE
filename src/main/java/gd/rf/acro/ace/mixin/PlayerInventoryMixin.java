@@ -25,8 +25,6 @@ public abstract class PlayerInventoryMixin {
 
     @Shadow public int selectedSlot;
 
-    @Shadow public abstract boolean insertStack(ItemStack stack);
-
     @Inject(at = @At("HEAD"), method = "scrollInHotbar", cancellable = true)
     private void scroll(double scrollAmount, CallbackInfo info) {
         if (scrollAmount > 0.0D) {
@@ -36,8 +34,7 @@ public abstract class PlayerInventoryMixin {
         if (scrollAmount < 0.0D) {
             scrollAmount = -1.0D;
         }
-        if(this.main.get(this.selectedSlot).getItem() instanceof IRenderableCastingDevice)
-        {
+        if(this.main.get(this.selectedSlot).getItem() instanceof IRenderableCastingDevice) {
             PacketByteBuf packetByteBuf = PacketByteBufs.create();
             packetByteBuf.writeInt((int) scrollAmount);
             ClientPlayNetworking.send(ACE.SCROLL_PACKET,packetByteBuf);

@@ -8,6 +8,7 @@ import gd.rf.acro.ace.effects.*;
 import gd.rf.acro.ace.entities.BoltEntity;
 import gd.rf.acro.ace.entities.EvilMageEntity;
 import gd.rf.acro.ace.items.*;
+import gd.rf.acro.ace.spells.SpellACE;
 import gd.rf.acro.ace.spells.SpellsOld;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -138,8 +139,7 @@ public class ACE implements ModInitializer {
 	public static final SpellCompendium SPELL_COMPENDIUM = new SpellCompendium(new Item.Settings());
 	public static final DustyTomeItem DUSTY_TOME_ITEM =new DustyTomeItem(new Item.Settings());
 
-	public void registerItems()
-	{
+	public void registerItems() {
 		Registry.register(Registries.ITEM,new Identifier("ace","master_spellbook"),MASTER_SPELL_BOOK);
 		Registry.register(Registries.ITEM,new Identifier("ace","earthen_pickaxe"),EARTHEN_PICKAXE);
 		Registry.register(Registries.ITEM,new Identifier("ace","ice_spike"),ICE_SPIKE_SWORD);
@@ -153,10 +153,10 @@ public class ACE implements ModInitializer {
 	}
 
 	//TODO: Fix
-	public static final TrapBlock FIRE_TRAP_BLOCK = new TrapBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.DESTROY).luminance((e)->4),"fire");
-	public static final TrapBlock AIR_TRAP_BLOCK = new TrapBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.DESTROY).luminance((e)->4),"air");
-	public static final TrapBlock EARTH_TRAP_BLOCK = new TrapBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.DESTROY).luminance((e)->4),"earth");
-	public static final TrapBlock WATER_TRAP_BLOCK = new TrapBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.DESTROY).luminance((e)->4),"water");
+	public static final TrapBlock FIRE_TRAP_BLOCK = new TrapBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.DESTROY).luminance((e)->4), SpellACE.Element.FIRE);
+	public static final TrapBlock AIR_TRAP_BLOCK = new TrapBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.DESTROY).luminance((e)->4), SpellACE.Element.AIR);
+	public static final TrapBlock EARTH_TRAP_BLOCK = new TrapBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.DESTROY).luminance((e)->4), SpellACE.Element.EARTH);
+	public static final TrapBlock WATER_TRAP_BLOCK = new TrapBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.DESTROY).luminance((e)->4), SpellACE.Element.WATER);
 	public static final FleetingBlock FLEETING_DIRT = new FleetingBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.DESTROY));
 	public static final FleetingBlock FLEETING_ICE = new FleetingBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.DESTROY).nonOpaque().solidBlock((a,b,c)->false).suffocates((a,b,c)->false).blockVision((a,b,c)->false));
 	public static final FleetingBlock MAGIC_BLOCK = new FleetingBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.DESTROY).nonOpaque().solidBlock((a,b,c)->false).suffocates((a,b,c)->false).blockVision((a,b,c)->false).strength(-1,3600000.0F).luminance(i->10),1000);
@@ -186,9 +186,7 @@ public class ACE implements ModInitializer {
 	public static final UndeadenedEffect UNDEADENED_EFFECT = new UndeadenedEffect(StatusEffectCategory.HARMFUL,Formatting.RED.getColorValue());
 	public static final AerialEffect AERIAL_EFFECT = new AerialEffect(StatusEffectCategory.BENEFICIAL,Formatting.WHITE.getColorValue());
 	public static final DoomsdayEffect DOOMSDAY_EFFECT = new DoomsdayEffect(StatusEffectCategory.HARMFUL,Formatting.BLACK.getColorValue());
-	public void registerEffects()
-	{
-
+	public void registerEffects() {
 		Registry.register(Registries.STATUS_EFFECT,new Identifier("ace","entangled"),ENTANGLED_EFFECT);
 		Registry.register(Registries.STATUS_EFFECT,new Identifier("ace","wind_call"),WIND_CALL_EFFECT);
 		Registry.register(Registries.STATUS_EFFECT,new Identifier("ace","second_chance"),SECOND_CHANCE_EFFECT);
@@ -207,8 +205,7 @@ public class ACE implements ModInitializer {
 	}
 
 	//Things like attributes for alive things and spawning (things)
-	public void registerEntityThings()
-	{
+	public void registerEntityThings() {
 		FabricDefaultAttributeRegistry.register(ACE.EVIL_MAGE_ENTITY_TYPE,EvilMageEntity.attributes());
 		BiomeModifications.addSpawn(BiomeSelectors.tag(BiomeTags.IS_OVERWORLD), SpawnGroup.MONSTER, ACE.EVIL_MAGE_ENTITY_TYPE, 5, 1, 3);
 

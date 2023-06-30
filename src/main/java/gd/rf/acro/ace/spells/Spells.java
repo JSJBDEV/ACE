@@ -16,6 +16,7 @@ public class Spells {
     private static SpellTypeACE<?> register(SpellType.SpellFactory<SpellACE> spellFactory, int manaCost, Element element, SpellACE.CastingType castingType, int tier, Identifier id) {
         SpellTypeACE<? extends SpellACE> spellTypeACE = new SpellTypeACE<>(spellFactory, manaCost, element, castingType, tier);
         Registry.register(Nebula.NebulaRegistries.SPELL_TYPE, id, spellTypeACE);
+        return spellTypeACE;
     }
     private static Identifier id(String path) {
         return new Identifier("asc", path);

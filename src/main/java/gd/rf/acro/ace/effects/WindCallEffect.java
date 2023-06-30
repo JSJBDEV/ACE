@@ -16,24 +16,20 @@ public class WindCallEffect extends StatusEffect {
     @Override
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onApplied(entity, attributes, amplifier);
-        if(entity instanceof PlayerEntity)
-        {
-            PlayerEntity playerEntity = (PlayerEntity) entity;
-            playerEntity.getAbilities().allowFlying=true;
-            playerEntity.getAbilities().flying=true;
-            playerEntity.sendAbilitiesUpdate();
+        if(entity instanceof PlayerEntity player) {
+            player.getAbilities().allowFlying=true;
+            player.getAbilities().flying=true;
+            player.sendAbilitiesUpdate();
         }
     }
 
     @Override
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onRemoved(entity, attributes, amplifier);
-        if(entity instanceof PlayerEntity)
-        {
-            PlayerEntity playerEntity = (PlayerEntity) entity;
-            playerEntity.getAbilities().allowFlying=false;
-            playerEntity.getAbilities().flying=false;
-            playerEntity.sendAbilitiesUpdate();
+        if(entity instanceof PlayerEntity player) {
+            player.getAbilities().allowFlying=false;
+            player.getAbilities().flying=false;
+            player.sendAbilitiesUpdate();
         }
     }
 }

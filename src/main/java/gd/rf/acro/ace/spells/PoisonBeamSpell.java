@@ -28,10 +28,9 @@ public class PoisonBeamSpell extends SpellACE {
     @Override
     public void snapCast(LivingEntity caster) {
         super.snapCast(caster);
-        LivingEntity hit = Utils.castBeam(caster,caster.world,new float[]{0,1,0},2);
-        if(hit!=null)
-        {
-            Utils.createAOE(caster.world,hit.getBlockPos(),Utils.getColourForElement("earth"),new StatusEffectInstance(StatusEffects.POISON,200));
+        LivingEntity hit = Utils.castBeam(caster,caster.getWorld(),new float[]{0,1,0},2);
+        if(hit!=null) {
+            Utils.createAOE(caster.getWorld(),hit.getBlockPos(),Utils.getColourForElement(Element.EARTH),new StatusEffectInstance(StatusEffects.POISON,200));
         }
     }
 }

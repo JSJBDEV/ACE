@@ -16,7 +16,6 @@ public class AerialEffect extends StatusEffect {
 
     @Override
     public boolean canApplyUpdateEffect(int duration, int amplifier) {
-
         return true;
     }
 
@@ -25,8 +24,7 @@ public class AerialEffect extends StatusEffect {
         super.applyUpdateEffect(entity, amplifier);
         entity.fallDistance=0;
         entity.setAir(0);
-        if(entity.isOnGround())
-        {
+        if(entity.isOnGround()) {
             entity.removeStatusEffect(ACE.AERIAL_EFFECT);
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED,50));
         }

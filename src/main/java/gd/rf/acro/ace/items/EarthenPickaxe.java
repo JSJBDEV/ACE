@@ -22,21 +22,17 @@ public class EarthenPickaxe extends PickaxeItem {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-        if(!stack.hasNbt())
-        {
+        if(!stack.hasNbt()) {
             stack.setNbt(new NbtCompound());
         }
-        if(!stack.getNbt().contains("fleeting"))
-        {
+        if(!stack.getNbt().contains("fleeting")) {
             stack.getNbt().putLong("fleeting",world.getLunarTime()+24000L);
 
         }
-        if(world.getLunarTime()>=stack.getNbt().getLong("fleeting"))
-        {
+        if(world.getLunarTime()>=stack.getNbt().getLong("fleeting")) {
             stack.decrement(1);
         }
-        if(world.getLunarTime()<(stack.getNbt().getLong("fleeting")-24000L))
-        {
+        if(world.getLunarTime()<(stack.getNbt().getLong("fleeting")-24000L)) {
             //this will occur if the time becomes less than its initial time:
             //e.g when /time set day is ran
             stack.decrement(1);
@@ -48,8 +44,7 @@ public class EarthenPickaxe extends PickaxeItem {
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        if(stack.hasNbt())
-        {
+        if(stack.hasNbt()) {
             tooltip.add(Text.of("Expires: Tomorrow "+ Calendar.getDayPeriod(stack.getNbt().getLong("fleeting"))));
         }
     }
